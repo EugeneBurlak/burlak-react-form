@@ -1,0 +1,151 @@
+$error: #ff3433;
+
+.form{
+  &, *{
+    box-sizing: border-box;
+  }
+  font-size: 0;
+  margin: 0 -15px;
+  &-col,
+  &-field{
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    &__half{
+      width: 50%;
+    }
+    &__third{
+      width: 33.33333%;
+    }
+    &__quarter{
+      width: 25%;
+    }
+  }
+  &-field{
+    padding: 10px 15px;
+    input, select, textarea, button{
+      width: 100%;
+      font-size: 14px;
+      border-radius: 0;
+      line-height: 1em;
+      padding: 10px 10px;
+      border: 2px solid black;
+      height: 41px;
+      color: black;
+      &:focus{
+        outline: none;
+      }
+    }
+    select[multiple]{
+      height: auto;
+    }
+    textarea{
+      resize: none;
+      height: 102px;
+    }
+    [type="submit"]{
+      transition: all 0.3s;
+      color: white;
+      background-color: black;
+      cursor: pointer;
+      box-shadow: 0 0 0 0 black;
+      &:hover{
+        box-shadow: 0 0 0 2px black;
+      }
+    }
+  }
+  &-label{
+    display: block;
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+  }
+  &-error{
+    margin-top: 5px;
+    color: $error;
+    font-size: 14px;
+  }
+}
+
+// checkbox/radios
+.form{
+  &-switcher{
+    font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    padding-left: 28px;
+    user-select: none;
+    &-pointer{
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 2px #000;
+      transition: all 0.3s;
+      transform: translateY(-50%);
+      &:after{
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        width: 50%;
+        height: 50%;
+        background-color: #000;
+        border-radius: 50%;
+        transition: all 0.3s;
+      }
+    }
+    &__checked{
+      .form-switcher{
+        &-pointer{
+          &:after{
+            transform: translate(-50%, -50%) scale(1);
+          }
+        }
+      }
+    }
+    &__checkbox{
+      .form-switcher{
+        &-pointer{
+          border-radius: 0;
+          &:after{
+            border-radius: 0;
+          }
+        }
+      }
+    }
+  }
+  &-field{
+    &__checkbox,
+    &__radio{
+      input{
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+  &-list{
+    &-item{
+      display: block;
+      width: 100%;
+      position: relative;
+      padding: 8px 0;
+    }
+    &__inline{
+      .form-list{
+        &-item{
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 10px;
+          width: auto;
+        }
+      }
+    }
+  }
+}
