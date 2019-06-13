@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 //config
 const ROOT_DIR = __dirname;
@@ -74,10 +73,6 @@ module.exports = {
     historyApiFallback: true,
   },
   plugins: [
-    new FaviconsWebpackPlugin({
-      logo: "./src/favicon.svg",
-      inject: true
-    }),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       APP_CONFIG: JSON.stringify(JSON_CONFIG),

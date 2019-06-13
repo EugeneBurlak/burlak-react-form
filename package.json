@@ -1,11 +1,11 @@
 {
   "name": "burlak-react-form",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EugeneBurlak/burlak-react-form.git"
   },
-  "main": "src/index.js",
+  "main": "dist/bundle.js",
   "author": "Eugene Burlak <eugeneburlak@yandex.ru>",
   "license": "MIT",
   "description": "",
@@ -33,6 +33,10 @@
     "webpack-dev-server": "^3.5.1"
   },
   "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "peerDependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
