@@ -20,7 +20,8 @@ module.exports = {
   output: {
     path: path.join(ROOT_DIR, "/dist"),
     publicPath: JSON_CONFIG.publicPath,
-    filename: "bundle.js"
+    filename: "bundle.js",
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
