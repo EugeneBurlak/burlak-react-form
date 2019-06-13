@@ -21,7 +21,7 @@ module.exports = {
     path: path.join(ROOT_DIR, "/dist"),
     publicPath: JSON_CONFIG.publicPath,
     filename: "bundle.js",
-    libraryTarget: 'commonjs2'
+    libraryTarget: isDevelopment ? 'umd' : 'commonjs2'
   },
   module: {
     rules: [
