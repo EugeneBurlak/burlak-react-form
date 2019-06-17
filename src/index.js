@@ -7,6 +7,7 @@ class App extends Component{
   render(){
     return(
       <Form
+        autoReset={true}
         onSubmit={(data) => {
           console.log(data);
           return new Promise((resolve, reject) => {
@@ -26,9 +27,10 @@ class App extends Component{
           {
             name: 'radios',
             label: 'ENTER_MESSAGE',
-            type: 'select',
+            type: 'checkbox',
             col: 'second',
             size: 1,
+            value:['first'],
             options: [{
               value: 'first',
               text: 'first text'

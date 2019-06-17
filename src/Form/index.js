@@ -26,10 +26,7 @@ export default class Form extends Component {
   componentWillMount(){
     let {fields, values} = this.state;
     fields && fields.map((item, index) => {
-      let defaultValue = '';
-      if(item.type === 'checkbox') defaultValue = [];
-      if(item.type === 'select') defaultValue = [];
-      if(item.name) values[item.name] = item.value || defaultValue;
+      if(item.name) values[item.name] = this.getDefaultValue(item);
     });
     this.setState({
       values
@@ -66,16 +63,15 @@ export default class Form extends Component {
   }
 
   checkboxChange(item, checkbox, event){
-    let {values} = this.state;
-    if(event.target.checked){
-      values[item.name].push(checkbox.value)
-    }
-    else{
-      let index = values[item.name].findIndex((e, i) => {
-        return e === checkbox.value
-      });
-      values[item.name].splice(index, 1);
-    }
+    let {values} = this.state,
+      array = [],
+      dom = document.querySelectorAll('[name="'+item.name+'__'+this.state.hash+'"]');
+    dom.forEach((e, i) => {
+      if(e.checked){
+        array.push(e.value);
+      }
+    });
+    values[item.name] = array;
     this.setState({
       values
     });
@@ -89,14 +85,26 @@ export default class Form extends Component {
     });
   }
 
+  boolChange(item, event){
+    let {values} = this.state;
+    values[item.name] = event.target.checked;
+    this.setState({
+      values
+    })
+  }
+
+  getDefaultValue(field){
+    let result = '';
+    if(field.type === 'checkbox' || field.type === 'select') result = [];
+    if((field.type === 'checkbox' || field.type === 'radio') && !field.options) result = false;
+    return field.value || result;
+  }
+
   clearForm(){
     let {fields} = this.state,
       values = {};
     fields && fields.map((field, index) => {
-      let defaultValue = '';
-      if(field.type === 'checkbox') defaultValue = [];
-      if(field.type === 'select') defaultValue = [];
-      if(field.name) values[field.name] = field.value || defaultValue;
+      if(field.name) values[field.name] = this.getDefaultValue(field);
     });
     this.setState({
       values
@@ -105,7 +113,7 @@ export default class Form extends Component {
 
   buildInput(item){
     let className = 'form-control';
-    if(item.width) className += ' form-control___'+item.type;
+    if(item.width) className += ' form-control__'+item.type;
     if(item.className) className += ' '+item.className;
     return(
       <input
@@ -177,7 +185,7 @@ export default class Form extends Component {
     if(item.inline) listClass += ' form-list__inline';
     return(
       <div className={listClass}>
-        {item.options && item.options.map((switcher, index) => {
+        {item.options ? item.options.map((switcher, index) => {
           let checked = (() => {
               if(item.type === 'checkbox'){
                 return this.state.values[item.name] ? this.state.values[item.name].indexOf(switcher.value) >= 0 : false;
@@ -194,8 +202,9 @@ export default class Form extends Component {
               name={item.name+'__'+this.state.hash}
               type={item.type}
               onChange={(event) => {
-                if(item.type === 'checkbox')
+                if(item.type === 'checkbox'){
                   this.checkboxChange(item, switcher, event);
+                }
                 if(item.type === 'radio')
                   this.radioChange(item, switcher, event);
               }}
@@ -206,7 +215,30 @@ export default class Form extends Component {
               <div dangerouslySetInnerHTML={{__html: switcher.text}} />
             </div>
           </label>;
-        })}
+        }) :
+          (() => {
+            let checked = this.state.values[item.name] || false,
+              className = 'form-list-item',
+              switcherClassName = 'form-switcher form-switcher__'+item.type;
+            if(checked) switcherClassName += ' form-switcher__checked'
+            return(
+              <label className={className}>
+                <input
+                  name={item.name+'__'+this.state.hash}
+                  type={item.type}
+                  onChange={(event) => {
+                    this.boolChange(item, event);
+                  }}
+                  value={item.value}
+                  checked={checked} />
+                <div className={switcherClassName}>
+                  <div className="form-switcher-pointer"></div>
+                  <div dangerouslySetInnerHTML={{__html: item.text}} />
+                </div>
+              </label>
+            )
+          })()
+        }
       </div>
     )
   }
@@ -225,7 +257,7 @@ export default class Form extends Component {
       errors = [];
     fields.forEach((item, index) => {
       if(item.validation){
-        let error = item.validation(this.state.values[item.name]);
+        let error = item.validation(this.state.values[item.name], this.state.values);
         if(error){
           fields[index]['error'] = error;
           errors.push({
@@ -249,7 +281,7 @@ export default class Form extends Component {
     if(errors.length) return false;
     let data = Object.assign({}, this.state.values);
     this.props.onSubmit && this.props.onSubmit(data).then((resp) => {
-      this.clearForm();
+      this.props.autoReset && this.clearForm();
     });
   }
 
@@ -277,22 +309,37 @@ export default class Form extends Component {
   }
 
   buildControl(field){
-    return this.switcher(field)
+    return (
+      <div className="form-control-wrapper">
+        {this.switcher(field)}
+      </div>
+    )
+  }
+
+  buildHtml(data){
+    return(
+      <div className="form-html">
+        {data}
+      </div>
+    )
   }
 
   buildField(field, index){
     let className = 'form-field';
     if(field.width) className += ' form-field__'+field.width;
     if(field.type) className += ' form-field__'+field.type;
+    if(field.error) className += ' form-field__error';
     if(field.wrapperClassName) className += ' '+field.wrapperClassName;
     return (
       <div
         className={className}
         key={index}
       >
+        {field.htmlBefore && this.buildHtml(field.htmlBefore)}
         {this.buildLabel(field)}
         {this.buildControl(field)}
         {this.buildError(field)}
+        {field.htmlAfter && this.buildHtml(field.htmlAfter)}
       </div>
     )
   }
@@ -315,9 +362,11 @@ export default class Form extends Component {
   buildLabel(field){
     if(!field.label) return null;
     return(
-      <label className="form-label" htmlFor={field.name+'__'+this.state.hash}>
-        {field.label}
-      </label>
+      <div className="form-label">
+        <label htmlFor={field.name+'__'+this.state.hash}>
+          {field.label}
+        </label>
+      </div>
     )
   }
 
@@ -341,7 +390,8 @@ export default class Form extends Component {
             })
             :
             fields && fields.map((item, index) => {
-              return this.buildField(item, index)
+              let item2 = Object.assign({}, item);
+              return this.buildField(item2, index)
             })
           }
         </form>
