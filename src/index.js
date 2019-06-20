@@ -64,6 +64,11 @@ class App extends Component{
             validation: (checked) => {
               if(!checked.length) return 'REQUIRED';
             }
+          },{
+            name: 'dsadadas',
+            type: 'file',
+            col: 'second',
+            placeholder: '1'
           },
           {
             value: 'SEND_MESSAGE',
