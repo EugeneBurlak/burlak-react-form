@@ -199,10 +199,12 @@ $green: #30b973;
         transition: all 0.3s;
       }
       &.drag-over{
-        label{
-          background-color: $green;
-          border-color: #fff;
-          .form-file{
+        .form-file{
+          label{
+            background-color: $green;
+            border-color: #fff;
+          }
+          &-text{
             color: #fff;
           }
         }
@@ -219,11 +221,58 @@ $green: #30b973;
     }
   }
   &-file{
-    font-size: 14px;
-    color: #000;
+    position: relative;
+    &-text{
+      font-size: 14px;
+      color: #000;
+      transition: all 0.3s;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      span{
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+//reset
+
+.form{
+  .form-control-wrapper{
+    &__with-reset{
+      position: relative;
+      padding-right: 35px;
+    }
+  }
+  &-reset{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    margin-top: -12px;
+    background-color: $green;
+    border-radius: 50%;
     transition: all 0.3s;
-    span{
-      margin-right: 10px;
+    cursor: pointer;
+    padding: 3px;
+    svg{
+      fill: #fff;
+      width: 100%;
+      height: auto;
+      transition: all 0.3s;
+    }
+    &:hover{
+      background-color: #fff;
+      box-shadow: 0 0 0 2px $green;
+      padding: 1px;
+      transform: rotate(90deg);
+      svg{
+        fill: $green
+      }
+    }
+    &:active{
+      transform: rotate(90deg) scale(0.8);
     }
   }
 }

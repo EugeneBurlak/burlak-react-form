@@ -190,16 +190,25 @@ export default class Form extends Component {
       : result;
   }
 
-  clearForm() {
-    let { fields } = this.state,
-      values = {};
-    fields &&
-      fields.map((field, index) => {
-        if (field.name) values[field.name] = this.getDefaultValue(field);
+  resetForm() {
+    setTimeout(() => {
+      let { fields } = this.state,
+        values = {};
+      fields &&
+        fields.map((field, index) => {
+          if (field.name) values[field.name] = this.resetField(field, false);
+        });
+      this.setState({
+        values
       });
-    this.setState({
-      values
-    });
+    }, 0);
+  }
+
+  resetField(item, setState = true) {
+    let { values } = this.state;
+    values[item.name] = this.getDefaultValue(item);
+    if(setState) this.setState({values});
+    return values[item.name];
   }
 
   buildInput(item) {
@@ -224,14 +233,16 @@ export default class Form extends Component {
   }
 
   buildFile(item) {
-    let className = "form-control";
+    let className = "form-control",
+      fileWrapperClassName = "form-file";
     if (item.type) className += " form-control__" + item.type;
     if (item.width) className += " form-control__" + item.width;
     if (item.className) className += " " + item.className;
-    let values = this.state.values[item.name];
+    let values = this.state.values[item.name],
+      resetButton = item && item.resetButton ? item.resetButton : false;
     return (
-      <label>
-        <div className="form-file">
+      <div className={fileWrapperClassName}>
+        <label>
           <div className="form-file-text">
             {values.length
               ? values.map((file, index) => {
@@ -239,21 +250,21 @@ export default class Form extends Component {
                 })
               : item.placeholder}
           </div>
-        </div>
-        <input
-          id={item.name + "__" + this.state.hash}
-          className={className}
-          placeholder={item.placeholder}
-          disabled={item.disabled}
-          multiple={item.multiple || false}
-          onChange={event => {
-            this.fileChange(item, event);
-          }}
-          type={item.type}
-        />
-      </label>
+          <input
+            id={item.name + "__" + this.state.hash}
+            className={className}
+            placeholder={item.placeholder}
+            disabled={item.disabled}
+            multiple={item.multiple || false}
+            onChange={event => {
+              this.fileChange(item, event);
+            }}
+            type={item.type}
+          />
+        </label>
+      </div>
     );
-  }
+  };
 
   buildTextarea(item) {
     let className = "form-control";
@@ -448,19 +459,16 @@ export default class Form extends Component {
       let data = Object.assign({}, this.state.values),
         onSubmit = this.props.onSubmit(data, e);
       if (onSubmit instanceof Promise) {
-        onSubmit
-          .then(resp => {
-            this.props.autoReset && this.clearForm();
+        onSubmit.then((resp) => {
+            this.props.autoReset && this.resetForm();
             resolve();
-          })
-          .catch(error => {
+          }).catch((error) => {
             reject();
-          })
-          .finally(() => {
+          }).finally(() => {
             this.afterSubmit();
           });
       } else {
-        this.props.autoReset && this.clearForm();
+        this.props.autoReset && this.resetForm();
         this.afterSubmit();
         resolve();
       }
@@ -494,10 +502,15 @@ export default class Form extends Component {
     }
   }
 
-  buildControl(field) {
+  buildControl(item) {
+    let className = 'form-control-wrapper',
+      resetButton = item && item.resetButton ? item.resetButton : false;
+    if(resetButton && resetButton.enable) className += ' form-control-wrapper__with-reset';
     return (
-      <div className="form-control-wrapper" title={field.title}>
-        {this.switcher(field)}
+      <div className={className} title={item.title}>
+        {this.switcher(item)}
+        {this.buildError(item)}
+        {this.buildReset(item)}
       </div>
     );
   }
@@ -521,7 +534,6 @@ export default class Form extends Component {
         {field.htmlBefore && this.buildHtml(field.htmlBefore)}
         {this.buildLabel(field)}
         {this.buildControl(field)}
-        {this.buildError(field)}
         {field.htmlAfter && this.buildHtml(field.htmlAfter)}
       </div>
     );
@@ -549,7 +561,14 @@ export default class Form extends Component {
     return (
       <div className="form-label">
         <label htmlFor={field.name + "__" + this.state.hash}>
-          {field.label}
+          {field.label.split('\n').map(function(item) {
+            return (
+              <div>
+                {item}
+                <br />
+              </div>
+            )
+          })}
         </label>
       </div>
     );
@@ -558,6 +577,23 @@ export default class Form extends Component {
   buildError(field) {
     if (!field.error) return null;
     return <div className="form-error">{field.error}</div>;
+  }
+
+  buildReset(item){
+    let resetButton = item && item.resetButton ? item.resetButton : false;
+    return(
+      resetButton && resetButton.enable ?
+        <div className={['form-reset', resetButton.className].join(' ')} title={resetButton.title} onClick={(e) => {
+          e.preventDefault();
+          this.resetField(item);
+        }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z" />
+          </svg>
+        </div>
+        :
+        null
+    )
   }
 
   render() {
