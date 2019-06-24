@@ -125,11 +125,11 @@ export default class Form extends Component {
 
   selectChange(item, event) {
     let { values } = this.state,
-      options = event.target.querySelectorAll("option"),
+      options = event.target.options,
       array = [];
-    options.forEach((item, index) => {
-      if (item.selected) array.push(item.value);
-    });
+    for(let option of options){
+      if (option.selected) array.push(option.value);
+    }
     if (item.multiple) values[item.name] = array;
     else values[item.name] = event.target.value;
     item.onChange && item.onChange(values[item.name], item);
@@ -207,7 +207,7 @@ export default class Form extends Component {
   resetField(item, setState = true) {
     let { values } = this.state;
     values[item.name] = this.getDefaultValue(item);
-    if(setState) this.setState({values});
+    if (setState) this.setState({ values });
     return values[item.name];
   }
 
@@ -264,7 +264,7 @@ export default class Form extends Component {
         </label>
       </div>
     );
-  };
+  }
 
   buildTextarea(item) {
     let className = "form-control";
@@ -299,6 +299,7 @@ export default class Form extends Component {
         multiple={multiple}
         disabled={item.disabled}
         size={multiple ? item.size || 0 : 1}
+        value={values[item.name]}
         onChange={event => {
           this.selectChange(item, event);
         }}
@@ -309,11 +310,6 @@ export default class Form extends Component {
               <option
                 key={index}
                 disabled={option.disabled}
-                selected={(() => {
-                  if (multiple)
-                    return values[item.name].indexOf(option.value) >= 0;
-                  else return option.value === values[item.name];
-                })()}
                 value={option.value}
               >
                 {option.text}
@@ -459,12 +455,15 @@ export default class Form extends Component {
       let data = Object.assign({}, this.state.values),
         onSubmit = this.props.onSubmit(data, e);
       if (onSubmit instanceof Promise) {
-        onSubmit.then((resp) => {
+        onSubmit
+          .then(resp => {
             this.props.autoReset && this.resetForm();
             resolve();
-          }).catch((error) => {
+          })
+          .catch(error => {
             reject();
-          }).finally(() => {
+          })
+          .finally(() => {
             this.afterSubmit();
           });
       } else {
@@ -499,13 +498,16 @@ export default class Form extends Component {
         return this.buildSubmit(field);
       case "file":
         return this.buildFile(field);
+      case "html":
+        return this.buildHtml(field);
     }
   }
 
   buildControl(item) {
-    let className = 'form-control-wrapper',
+    let className = "form-control-wrapper",
       resetButton = item && item.resetButton ? item.resetButton : false;
-    if(resetButton && resetButton.enable) className += ' form-control-wrapper__with-reset';
+    if (resetButton && resetButton.enable)
+      className += " form-control-wrapper__with-reset";
     return (
       <div className={className} title={item.title}>
         {this.switcher(item)}
@@ -516,7 +518,8 @@ export default class Form extends Component {
   }
 
   buildHtml(data) {
-    return <div className="form-html">{data}</div>;
+    if (!data) return null;
+    return <div className="form-html">{data.html || data}</div>;
   }
 
   buildField(field, index) {
@@ -561,13 +564,13 @@ export default class Form extends Component {
     return (
       <div className="form-label">
         <label htmlFor={field.name + "__" + this.state.hash}>
-          {field.label.split('\n').map(function(item) {
+          {field.label.split("\n").map(function(item, i) {
             return (
-              <div>
+              <div key={i}>
                 {item}
                 <br />
               </div>
-            )
+            );
           })}
         </label>
       </div>
@@ -579,21 +582,22 @@ export default class Form extends Component {
     return <div className="form-error">{field.error}</div>;
   }
 
-  buildReset(item){
+  buildReset(item) {
     let resetButton = item && item.resetButton ? item.resetButton : false;
-    return(
-      resetButton && resetButton.enable ?
-        <div className={['form-reset', resetButton.className].join(' ')} title={resetButton.title} onClick={(e) => {
+    return resetButton && resetButton.enable ? (
+      <div
+        className={["form-reset", resetButton.className].join(" ")}
+        title={resetButton.title}
+        onClick={e => {
           e.preventDefault();
           this.resetField(item);
-        }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z" />
-          </svg>
-        </div>
-        :
-        null
-    )
+        }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z" />
+        </svg>
+      </div>
+    ) : null;
   }
 
   render() {
