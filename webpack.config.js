@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 //config
 const ROOT_DIR = __dirname;
 const CLIENT_CONFIGS_DIR = path.resolve(ROOT_DIR, "./config");
@@ -42,6 +43,17 @@ module.exports = {
           },
           {
             loader: "css-loader"
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+                plugins: [
+                    autoprefixer({
+                        browsers:['ie >= 8', 'last 4 version']
+                    })
+                ],
+                sourceMap: true
+            }
           },
           {
             loader: "sass-loader",
