@@ -1,34 +1,22 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import Form from "./Form";
-
-
 class App extends Component{
   render(){
     return(
       <Form
-        autoReset={true}
+        styled
         onSubmit={(data) => {
           console.log(data);
           return new Promise((resolve, reject) => {
             resolve();
           })
         }}
-        cols={[
-          {
-            name: 'first',
-            width: 'half'
-          },{
-            name: 'second',
-            width: 'half'
-          }
-        ]}
         fields={[
           {
             name: 'radios',
             label: 'ENTER_MESSAGE',
             type: 'checkbox',
-            col: 'second',
             size: 1,
             value:['first'],
             options: [{
@@ -49,7 +37,6 @@ class App extends Component{
             name: 'radios2',
             label: 'ERROR',
             type: 'select',
-            col: 'second',
             multiple: true,
             options: [{
               value: 'first2',
@@ -67,7 +54,6 @@ class App extends Component{
           },{
             name: 'dsadadas',
             type: 'file',
-            col: 'second',
             placeholder: '1'
           },
           {

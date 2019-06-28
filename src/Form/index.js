@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import "./styles/styles.scss";
-import { isNull } from "util";
+import React, { Component } from 'react';
+import './styles/styles.scss';
+import { isNull } from 'util';
 export default class Form extends Component {
   constructor(props) {
     super(props);
@@ -39,32 +39,32 @@ export default class Form extends Component {
   }
 
   onDragListener(e) {
-    let fileWrapper = e.target.closest(".form-control-wrapper");
-    if (fileWrapper) fileWrapper.classList.add("drag-over");
+    let fileWrapper = e.target.closest('.form-control-wrapper');
+    if (fileWrapper) fileWrapper.classList.add('drag-over');
   }
 
   offDragListener(e) {
-    let fileWrapper = e.target.closest(".form-control-wrapper");
-    if (fileWrapper) fileWrapper.classList.remove("drag-over");
+    let fileWrapper = e.target.closest('.form-control-wrapper');
+    if (fileWrapper) fileWrapper.classList.remove('drag-over');
   }
 
   componentDidMount() {
     let files = this.refs.form.querySelectorAll('input[type="file"]');
     files.forEach((file, index) => {
-      file.addEventListener("dragenter", this.onDragListener);
-      file.addEventListener("dragover", this.onDragListener);
-      file.addEventListener("dragleave", this.offDragListener);
-      file.addEventListener("drop", this.offDragListener);
+      file.addEventListener('dragenter', this.onDragListener);
+      file.addEventListener('dragover', this.onDragListener);
+      file.addEventListener('dragleave', this.offDragListener);
+      file.addEventListener('drop', this.offDragListener);
     });
   }
 
   componentWillUnmount() {
     let files = this.refs.form.querySelectorAll('input[type="file"]');
     files.forEach((file, index) => {
-      file.removeEventListener("dragenter", this.onDragListener);
-      file.removeEventListener("dragover", this.onDragListener);
-      file.removeEventListener("dragleave", this.offDragListener);
-      file.removeEventListener("drop", this.offDragListener);
+      file.removeEventListener('dragenter', this.onDragListener);
+      file.removeEventListener('dragover', this.onDragListener);
+      file.removeEventListener('dragleave', this.offDragListener);
+      file.removeEventListener('drop', this.offDragListener);
     });
   }
 
@@ -73,9 +73,9 @@ export default class Form extends Component {
       result;
     (rand = rand.toString(16).substring(1)),
       (result = rand
-        .split("")
+        .split('')
         .splice(0, 10)
-        .join(""));
+        .join(''));
     return result;
   }
 
@@ -103,7 +103,7 @@ export default class Form extends Component {
           let base64 = btoa(reader.result);
           filesObject.push({
             name: file.name,
-            data: "data:" + file.type + ";base64," + base64,
+            data: 'data:' + file.type + ';base64,' + base64,
             type: file.type,
             size: file.size
           });
@@ -127,7 +127,7 @@ export default class Form extends Component {
     let { values } = this.state,
       options = event.target.options,
       array = [];
-    for(let option of options){
+    for (let option of options) {
       if (option.selected) array.push(option.value);
     }
     if (item.multiple) values[item.name] = array;
@@ -142,7 +142,7 @@ export default class Form extends Component {
     let { values } = this.state,
       array = [],
       dom = document.querySelectorAll(
-        '[name="' + item.name + "__" + this.state.hash + '"]'
+        '[name="' + item.name + '__' + this.state.hash + '"]'
       );
     dom.forEach((e, i) => {
       if (e.checked) {
@@ -175,17 +175,17 @@ export default class Form extends Component {
   }
 
   getDefaultValue(field) {
-    let result = "";
+    let result = '';
     if (
-      field.type === "checkbox" ||
-      field.type === "select" ||
-      field.type === "file"
+      field.type === 'checkbox' ||
+      field.type === 'select' ||
+      field.type === 'file'
     )
       result = [];
-    if ((field.type === "checkbox" || field.type === "radio") && !field.options)
+    if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
       result = false;
-    if (field.type === "select" && !field.multiple) result = "";
-    return field.hasOwnProperty("value") && !isNull(field.value)
+    if (field.type === 'select' && !field.multiple) result = '';
+    return field.hasOwnProperty('value') && !isNull(field.value)
       ? field.value
       : result;
   }
@@ -212,17 +212,17 @@ export default class Form extends Component {
   }
 
   buildInput(item) {
-    let className = "form-control";
-    if (item.type) className += " form-control__" + item.type;
-    if (item.width) className += " form-control__" + item.width;
-    if (item.className) className += " " + item.className;
+    let className = 'form-control';
+    if (item.type) className += ' form-control__' + item.type;
+    if (item.width) className += ' form-control__' + item.width;
+    if (item.className) className += ' ' + item.className;
     return (
       <input
-        id={item.name + "__" + this.state.hash}
+        id={item.name + '__' + this.state.hash}
         className={className}
         placeholder={item.placeholder}
         disabled={item.disabled}
-        inputMode={item.inputmode || ""}
+        inputMode={item.inputmode || ''}
         onChange={event => {
           this.inputChange(item, event);
         }}
@@ -233,11 +233,11 @@ export default class Form extends Component {
   }
 
   buildFile(item) {
-    let className = "form-control",
-      fileWrapperClassName = "form-file";
-    if (item.type) className += " form-control__" + item.type;
-    if (item.width) className += " form-control__" + item.width;
-    if (item.className) className += " " + item.className;
+    let className = 'form-control',
+      fileWrapperClassName = 'form-file';
+    if (item.type) className += ' form-control__' + item.type;
+    if (item.width) className += ' form-control__' + item.width;
+    if (item.className) className += ' ' + item.className;
     let values = this.state.values[item.name],
       resetButton = item && item.resetButton ? item.resetButton : false;
     return (
@@ -251,7 +251,7 @@ export default class Form extends Component {
               : item.placeholder}
           </div>
           <input
-            id={item.name + "__" + this.state.hash}
+            id={item.name + '__' + this.state.hash}
             className={className}
             placeholder={item.placeholder}
             disabled={item.disabled}
@@ -267,13 +267,13 @@ export default class Form extends Component {
   }
 
   buildTextarea(item) {
-    let className = "form-control";
-    if (item.type) className += " form-control__" + item.type;
-    if (item.width) className += " form-control__" + item.width;
-    if (item.className) className += " " + item.className;
+    let className = 'form-control';
+    if (item.type) className += ' form-control__' + item.type;
+    if (item.width) className += ' form-control__' + item.width;
+    if (item.className) className += ' ' + item.className;
     return (
       <textarea
-        id={item.name + "__" + this.state.hash}
+        id={item.name + '__' + this.state.hash}
         className={className}
         placeholder={item.placeholder}
         disabled={item.disabled}
@@ -286,15 +286,15 @@ export default class Form extends Component {
   }
 
   buildSelect(item) {
-    let className = "form-control",
+    let className = 'form-control',
       multiple = item.multiple || false,
       { values } = this.state;
-    if (item.type) className += " form-control__" + item.type;
-    if (item.width) className += " form-control__" + item.width;
-    if (item.className) className += " " + item.className;
+    if (item.type) className += ' form-control__' + item.type;
+    if (item.width) className += ' form-control__' + item.width;
+    if (item.className) className += ' ' + item.className;
     return (
       <select
-        id={item.name + "__" + this.state.hash}
+        id={item.name + '__' + this.state.hash}
         className={className}
         multiple={multiple}
         disabled={item.disabled}
@@ -321,37 +321,37 @@ export default class Form extends Component {
   }
 
   buildSwitcher(item) {
-    let listClass = "form-list";
-    if (item.inline) listClass += " form-list__inline";
+    let listClass = 'form-list';
+    if (item.inline) listClass += ' form-list__inline';
     return (
       <div className={listClass}>
         {item.options
           ? item.options.map((switcher, index) => {
               let checked = (() => {
-                  if (item.type === "checkbox") {
+                  if (item.type === 'checkbox') {
                     return this.state.values[item.name]
                       ? this.state.values[item.name].indexOf(switcher.value) >=
                           0
                       : false;
                   }
-                  if (item.type === "radio") {
+                  if (item.type === 'radio') {
                     return this.state.values[item.name] === switcher.value;
                   }
                 })(),
-                className = "form-list-item",
-                switcherClassName = "form-switcher form-switcher__" + item.type;
-              if (checked) switcherClassName += " form-switcher__checked";
+                className = 'form-list-item',
+                switcherClassName = 'form-switcher form-switcher__' + item.type;
+              if (checked) switcherClassName += ' form-switcher__checked';
               return (
                 <label key={index} className={className}>
                   <input
-                    name={item.name + "__" + this.state.hash}
+                    name={item.name + '__' + this.state.hash}
                     type={item.type}
                     disabled={switcher.disabled}
                     onChange={event => {
-                      if (item.type === "checkbox") {
+                      if (item.type === 'checkbox') {
                         this.checkboxChange(item, switcher, event);
                       }
-                      if (item.type === "radio")
+                      if (item.type === 'radio')
                         this.radioChange(item, switcher, event);
                     }}
                     value={switcher.value}
@@ -366,13 +366,13 @@ export default class Form extends Component {
             })
           : (() => {
               let checked = this.state.values[item.name] || false,
-                className = "form-list-item",
-                switcherClassName = "form-switcher form-switcher__" + item.type;
-              if (checked) switcherClassName += " form-switcher__checked";
+                className = 'form-list-item',
+                switcherClassName = 'form-switcher form-switcher__' + item.type;
+              if (checked) switcherClassName += ' form-switcher__checked';
               return (
                 <label className={className}>
                   <input
-                    name={item.name + "__" + this.state.hash}
+                    name={item.name + '__' + this.state.hash}
                     type={item.type}
                     disabled={item.disabled}
                     onChange={event => {
@@ -415,12 +415,12 @@ export default class Form extends Component {
           this.state.values
         );
         if (error) {
-          fields[index]["error"] = error;
+          fields[index]['error'] = error;
           errors.push({
             [item.name]: error
           });
         } else {
-          delete fields[index]["error"];
+          delete fields[index]['error'];
         }
       }
     });
@@ -453,8 +453,8 @@ export default class Form extends Component {
       if (errors.length) return false;
       this.beforeSubmit();
       let data = Object.assign({}, this.state.values),
-        onSubmit = this.props.onSubmit(data, e);
-      if (onSubmit instanceof Promise) {
+        onSubmit = this.props.onSubmit && this.props.onSubmit(data, e);
+      if (onSubmit && onSubmit instanceof Promise) {
         onSubmit
           .then(resp => {
             this.props.autoReset && this.resetForm();
@@ -476,38 +476,38 @@ export default class Form extends Component {
 
   switcher(field) {
     switch (field.type) {
-      case "text":
+      case 'text':
         return this.buildInput(field);
-      case "password":
+      case 'password':
         return this.buildInput(field);
-      case "email":
+      case 'email':
         return this.buildInput(field);
-      case "tel":
+      case 'tel':
         return this.buildInput(field);
-      case "date":
+      case 'date':
         return this.buildInput(field);
-      case "textarea":
+      case 'textarea':
         return this.buildTextarea(field);
-      case "select":
+      case 'select':
         return this.buildSelect(field);
-      case "checkbox":
+      case 'checkbox':
         return this.buildSwitcher(field);
-      case "radio":
+      case 'radio':
         return this.buildSwitcher(field);
-      case "submit":
+      case 'submit':
         return this.buildSubmit(field);
-      case "file":
+      case 'file':
         return this.buildFile(field);
-      case "html":
+      case 'html':
         return this.buildHtml(field);
     }
   }
 
   buildControl(item) {
-    let className = "form-control-wrapper",
+    let className = 'form-control-wrapper',
       resetButton = item && item.resetButton ? item.resetButton : false;
     if (resetButton && resetButton.enable)
-      className += " form-control-wrapper__with-reset";
+      className += ' form-control-wrapper__with-reset';
     return (
       <div className={className} title={item.title}>
         {this.switcher(item)}
@@ -524,14 +524,14 @@ export default class Form extends Component {
 
   buildField(field, index) {
     let { loading } = this.state,
-      className = "form-field";
-    if (field.width) className += " form-field__" + field.width;
-    if (field.type) className += " form-field__" + field.type;
-    if (field.error) className += " form-field__error";
-    if (field.hidden) className += " form-field__hidden";
-    if (field.wrapperClassName) className += " " + field.wrapperClassName;
-    if (field.type === "submit" && loading)
-      className += " form-field__" + field.type + "__loading";
+      className = 'form-field';
+    if (field.width) className += ' form-field__' + field.width;
+    if (field.type) className += ' form-field__' + field.type;
+    if (field.error) className += ' form-field__error';
+    if (field.hidden) className += ' form-field__hidden';
+    if (field.wrapperClassName) className += ' ' + field.wrapperClassName;
+    if (field.type === 'submit' && loading)
+      className += ' form-field__' + field.type + '__loading';
     return (
       <div className={className} key={index}>
         {field.htmlBefore && this.buildHtml(field.htmlBefore)}
@@ -544,8 +544,8 @@ export default class Form extends Component {
 
   buildCol(col, index) {
     let { fields } = this.state,
-      className = "form-col";
-    if (col.width) className += " form-col__" + col.width;
+      className = 'form-col';
+    if (col.width) className += ' form-col__' + col.width;
     return (
       <div key={index} className={className}>
         {fields
@@ -563,8 +563,8 @@ export default class Form extends Component {
     if (!field.label) return null;
     return (
       <div className="form-label">
-        <label htmlFor={field.name + "__" + this.state.hash}>
-          {field.label.split("\n").map(function(item, i) {
+        <label htmlFor={field.name + '__' + this.state.hash}>
+          {field.label.split('\n').map(function(item, i) {
             return (
               <div key={i}>
                 {item}
@@ -586,7 +586,7 @@ export default class Form extends Component {
     let resetButton = item && item.resetButton ? item.resetButton : false;
     return resetButton && resetButton.enable ? (
       <div
-        className={["form-reset", resetButton.className].join(" ")}
+        className={['form-reset', resetButton.className].join(' ')}
         title={resetButton.title}
         onClick={e => {
           e.preventDefault();
@@ -604,12 +604,13 @@ export default class Form extends Component {
     let {
         fields,
         cols,
-        className = "",
-        title = "",
+        className = '',
+        title = '',
         loading = false
       } = this.state,
-      formClass = "form";
-    if (loading) formClass += " form__submitting";
+      formClass = 'form';
+    if(this.props.styled) formClass += ' form__styled';
+    if (loading) formClass += ' form__submitting';
     return (
       <div className={className}>
         <form ref="form" className={formClass} onSubmit={this.submit}>
