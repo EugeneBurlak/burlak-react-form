@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './styles/styles.scss';
-import { isNull } from 'util';
 export default class Form extends Component {
   constructor(props) {
     super(props);
@@ -185,7 +184,7 @@ export default class Form extends Component {
     if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
       result = false;
     if (field.type === 'select' && !field.multiple) result = '';
-    return field.hasOwnProperty('value') && !isNull(field.value)
+    return field.hasOwnProperty('value') && field.value !== null
       ? field.value
       : result;
   }
@@ -609,7 +608,7 @@ export default class Form extends Component {
         loading = false
       } = this.state,
       formClass = 'form';
-    if(this.props.styled) formClass += ' form__styled';
+    if (this.props.styled) formClass += ' form__styled';
     if (loading) formClass += ' form__submitting';
     return (
       <div className={className}>

@@ -14,6 +14,11 @@ class App extends Component{
         }}
         fields={[
           {
+            name: '11',
+            type: 'text',
+            value: '14'
+          },
+          {
             name: 'radios',
             label: 'ENTER_MESSAGE',
             type: 'checkbox',
