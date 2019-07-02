@@ -308,6 +308,9 @@ $white: #ffffff;
 .form__styled {
   margin: 0 auto;
   max-width: 650px;
+  a {
+    color: $green;
+  }
   .form {
     &-error {
       text-align: right;
