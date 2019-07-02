@@ -288,6 +288,23 @@ $white: #ffffff;
   }
 }
 
+.form-control-wrapper{
+  &__disabled{
+    cursor: not-allowed;
+    .form-file{
+      opacity: 0.5;
+      input{
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+@media(max-width: 768px){
+  .form-col__half, .form-field__half{
+    width: 100%;
+  }
+}
+
 .form__styled {
   margin: 0 auto;
   max-width: 650px;
@@ -388,37 +405,6 @@ $white: #ffffff;
         &:hover {
           color: $white;
           background-color: $green;
-        }
-      }
-    }
-  }
-  &-verify {
-    padding: 10px 0 10px 30%;
-    color: gray;
-    font-size: 14px;
-    a {
-      color: $green;
-      &[disabled] {
-        color: gray;
-        text-decoration: none;
-        cursor: not-allowed;
-      }
-      &:hover {
-        text-decoration: none;
-      }
-    }
-    .form {
-      margin: 0;
-      .form-field {
-        border-top: none;
-        border-bottom: none;
-        display: inline-block;
-        width: auto;
-        &__submit {
-          padding-left: 10px;
-        }
-        .form-control-wrapper {
-          width: 100%;
         }
       }
     }

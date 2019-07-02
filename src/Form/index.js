@@ -345,7 +345,7 @@ export default class Form extends Component {
                   <input
                     name={item.name + '__' + this.state.hash}
                     type={item.type}
-                    disabled={switcher.disabled}
+                    disabled={item.disabled || switcher.disabled}
                     onChange={event => {
                       if (item.type === 'checkbox') {
                         this.checkboxChange(item, switcher, event);
@@ -457,10 +457,10 @@ export default class Form extends Component {
         onSubmit
           .then(resp => {
             this.props.autoReset && this.resetForm();
-            resolve();
+            resolve(resp);
           })
           .catch(error => {
-            reject();
+            reject(error);
           })
           .finally(() => {
             this.afterSubmit();
@@ -507,6 +507,7 @@ export default class Form extends Component {
       resetButton = item && item.resetButton ? item.resetButton : false;
     if (resetButton && resetButton.enable)
       className += ' form-control-wrapper__with-reset';
+    if(item.disabled) className += ' form-control-wrapper__disabled';
     return (
       <div className={className} title={item.title}>
         {this.switcher(item)}
