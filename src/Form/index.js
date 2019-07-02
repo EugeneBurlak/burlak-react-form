@@ -507,7 +507,7 @@ export default class Form extends Component {
       resetButton = item && item.resetButton ? item.resetButton : false;
     if (resetButton && resetButton.enable)
       className += ' form-control-wrapper__with-reset';
-    if(item.disabled) className += ' form-control-wrapper__disabled';
+    if (item.disabled) className += ' form-control-wrapper__disabled';
     return (
       <div className={className} title={item.title}>
         {this.switcher(item)}
