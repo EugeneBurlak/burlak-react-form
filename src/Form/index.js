@@ -468,7 +468,7 @@ export default class Form extends Component {
       } else {
         this.props.autoReset && this.resetForm();
         this.afterSubmit();
-        resolve();
+        resolve(this.state);
       }
     });
   }
