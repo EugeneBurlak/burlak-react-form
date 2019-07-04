@@ -6,6 +6,7 @@ class App extends Component{
     return(
       <Form
         styled
+        autoReset={true}
         onSubmit={(data) => {
           console.log(data);
           return new Promise((resolve, reject) => {
@@ -21,15 +22,18 @@ class App extends Component{
           {
             name: 'radios',
             label: 'ENTER_MESSAGE',
-            type: 'checkbox',
-            size: 1,
-            value:['first'],
+            type: 'radio',
+            value: 'first',
+            inline: true,
+            resetButton: {
+              enable: true,
+            },
             options: [{
               value: 'first',
-              text: 'first text'
+              text: 'first text',
             },{
               value: 'second',
-              text: 'second text'
+              text: 'second text',
             },{
               value: 'third',
               text: 'third text'
@@ -42,9 +46,8 @@ class App extends Component{
             name: 'radios2',
             label: 'ERROR',
             type: 'select',
-            multiple: true,
             options: [{
-              value: 'first2',
+              value: 'first2second2',
               text: 'first text2'
             },{
               value: 'second2',
@@ -59,7 +62,8 @@ class App extends Component{
           },{
             name: 'dsadadas',
             type: 'file',
-            placeholder: '1'
+            placeholder: '1',
+            label: '123',
           },
           {
             value: 'SEND_MESSAGE',
