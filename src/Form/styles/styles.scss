@@ -93,6 +93,10 @@ $white: #ffffff;
   }
   &-html {
     font-size: 14px;
+    &__inline{
+      display: inline-block;
+      vertical-align: middle;
+    }
   }
 }
 
@@ -352,8 +356,6 @@ $white: #ffffff;
             }
           }
           &-html {
-            display: inline-block;
-            vertical-align: middle;
             a {
               color: $green;
             }
@@ -371,7 +373,13 @@ $white: #ffffff;
       display: inline-block;
       width: 30%;
       vertical-align: middle;
+      padding-right: 10px;
+      text-overflow: ellipsis;
       margin: 0;
+      &-line{
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       & + .form-control-wrapper {
         width: 70%;
         padding-left: 0;

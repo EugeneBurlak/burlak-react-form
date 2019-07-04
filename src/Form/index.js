@@ -519,7 +519,10 @@ export default class Form extends Component {
 
   buildHtml(data) {
     if (!data) return null;
-    return <div className="form-html">{data.html || data}</div>;
+    let className = 'form-html';
+    if (data.inline) className += ' form-html__inline';
+    if (data.className) className += ' ' + data.className;
+    return <div className={className}>{data.html || data}</div>;
   }
 
   buildField(field, index) {
@@ -566,7 +569,7 @@ export default class Form extends Component {
         <label htmlFor={field.name + '__' + this.state.hash}>
           {field.label.split('\n').map(function(item, i) {
             return (
-              <div key={i}>
+              <div className="form-label-line" key={i}>
                 {item}
                 <br />
               </div>
