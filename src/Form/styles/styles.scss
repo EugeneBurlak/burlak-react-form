@@ -185,11 +185,15 @@ $white: #ffffff;
       width: 100%;
       position: relative;
       padding: 8px 0;
-      &__inline {
-        display: inline-block;
-        vertical-align: top;
-        width: auto;
-        margin-right: 10px;
+    }
+    &__inline {
+      .form-list {
+        &-item {
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 10px;
+          width: auto;
+        }
       }
     }
   }
@@ -208,7 +212,7 @@ $white: #ffffff;
         cursor: pointer;
         transition: all 0.3s;
       }
-      &.drag-over:not(.form-control-wrapper__disabled) {
+      &.drag-over {
         .form-file {
           label {
             background-color: $green;

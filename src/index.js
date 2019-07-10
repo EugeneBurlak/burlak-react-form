@@ -45,7 +45,11 @@ class App extends Component {
             name: 'select',
             label: 'ERROR',
             type: 'select',
-            value: 'second2',
+            multiple: true,
+            value: ['second2', 'first2second2'],
+            resetButton: {
+              enable: true
+            },
             options: [
               {
                 value: 'first2second2',

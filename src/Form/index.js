@@ -191,11 +191,7 @@ export default class Form extends Component {
       field.options &&
       field.options.length
     ) {
-      result = (
-        field.options.filter((item, index) => {
-          return item.selected || false;
-        })[0] || field.options[0]
-      ).value;
+      result = field.options[0].value;
     }
     return field.hasOwnProperty('value') && field.value !== null
       ? field.value
