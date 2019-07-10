@@ -79,8 +79,10 @@ export default class Form extends Component {
   }
 
   inputChange(item, event) {
-    let { values } = this.state;
-    values[item.name] = event.target.value;
+    let { values } = this.state,
+      {value} = event.target;
+    if(item.beforeChange && !item.beforeChange(value)) return false;
+    values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
     this.setState({
       values
@@ -183,9 +185,7 @@ export default class Form extends Component {
       result = [];
     if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
       result = false;
-    if (field.type === 'select' && !field.multiple) {
-      result = field.options[0].value;
-    }
+    if (field.type === 'select' && !field.multiple) result = '';
     return field.hasOwnProperty('value') && field.value !== null
       ? field.value
       : result;
@@ -228,7 +228,7 @@ export default class Form extends Component {
           this.inputChange(item, event);
         }}
         type={item.type}
-        value={this.state.values[item.name]}
+        value={this.state.values[item.name] || ''}
       />
     );
   }
@@ -239,7 +239,8 @@ export default class Form extends Component {
     if (item.type) className += ' form-control__' + item.type;
     if (item.width) className += ' form-control__' + item.width;
     if (item.className) className += ' ' + item.className;
-    let values = this.state.values[item.name];
+    let values = this.state.values[item.name],
+      resetButton = item && item.resetButton ? item.resetButton : false;
     return (
       <div className={fileWrapperClassName}>
         <label>
@@ -322,6 +323,7 @@ export default class Form extends Component {
 
   buildSwitcher(item) {
     let listClass = 'form-list';
+    if (item.inline) listClass += ' form-list__inline';
     return (
       <div className={listClass}>
         {item.options
@@ -340,11 +342,8 @@ export default class Form extends Component {
                 className = 'form-list-item',
                 switcherClassName = 'form-switcher form-switcher__' + item.type;
               if (checked) switcherClassName += ' form-switcher__checked';
-              if (switcher.inline || item.inline)
-                className += ' form-list-item__inline';
               return (
                 <label key={index} className={className}>
-                  {switcher.htmlBefore && this.buildHtml(switcher.htmlBefore)}
                   <input
                     name={item.name + '__' + this.state.hash}
                     type={item.type}
@@ -363,7 +362,6 @@ export default class Form extends Component {
                     <div className="form-switcher-pointer" />
                     <div dangerouslySetInnerHTML={{ __html: switcher.text }} />
                   </div>
-                  {switcher.htmlAfter && this.buildHtml(switcher.htmlAfter)}
                 </label>
               );
             })
@@ -514,11 +512,9 @@ export default class Form extends Component {
     if (item.disabled) className += ' form-control-wrapper__disabled';
     return (
       <div className={className} title={item.title}>
-        {this.buildHtml(item.htmlBeforeControl)}
         {this.switcher(item)}
         {this.buildError(item)}
         {this.buildReset(item)}
-        {this.buildHtml(item.htmlAfterControl)}
       </div>
     );
   }
@@ -526,8 +522,8 @@ export default class Form extends Component {
   buildHtml(data) {
     if (!data) return null;
     let className = 'form-html';
-    if (data.inline) className += ' form-html__inline';
-    if (data.className) className += ' ' + data.className;
+    if(data.inline) className += ' form-html__inline';
+    if(data.className) className += ' '+data.className;
     return <div className={className}>{data.html || data}</div>;
   }
 
