@@ -212,7 +212,7 @@ $white: #ffffff;
         cursor: pointer;
         transition: all 0.3s;
       }
-      &.drag-over {
+      &.drag-over:not(.form-control-wrapper__disabled) {
         .form-file {
           label {
             background-color: $green;

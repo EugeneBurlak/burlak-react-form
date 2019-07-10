@@ -72,7 +72,7 @@ class App extends Component {
             name: 'dsadadas',
             type: 'file',
             placeholder: '1',
-            label: '123'
+            disabled: true,
           },
           {
             value: 'SEND_MESSAGE',
