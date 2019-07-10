@@ -80,8 +80,8 @@ export default class Form extends Component {
 
   inputChange(item, event) {
     let { values } = this.state,
-      {value} = event.target;
-    if(item.beforeChange && !item.beforeChange(value)) return false;
+      { value } = event.target;
+    if (item.beforeChange && !item.beforeChange(value)) return false;
     values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
     this.setState({
@@ -185,7 +185,11 @@ export default class Form extends Component {
       result = [];
     if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
       result = false;
-    if (field.type === 'select' && !field.multiple) result = '';
+    if (field.type === 'select' && !field.multiple && field.options && field.options.length) {
+      result = (field.options.filter((item, index) => {
+        return item.selected || false
+      })[0] || field.options[0]).value;
+    }
     return field.hasOwnProperty('value') && field.value !== null
       ? field.value
       : result;
@@ -522,8 +526,8 @@ export default class Form extends Component {
   buildHtml(data) {
     if (!data) return null;
     let className = 'form-html';
-    if(data.inline) className += ' form-html__inline';
-    if(data.className) className += ' '+data.className;
+    if (data.inline) className += ' form-html__inline';
+    if (data.className) className += ' ' + data.className;
     return <div className={className}>{data.html || data}</div>;
   }
 

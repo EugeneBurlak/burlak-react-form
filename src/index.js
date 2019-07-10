@@ -15,14 +15,6 @@ class App extends Component {
         }}
         fields={[
           {
-            name: '11',
-            type: 'date',
-            value: '14',
-            resetButton: {
-              enable: true
-            }
-          },
-          {
             name: 'radios',
             label: 'ENTER_MESSAGE',
             type: 'radio',
@@ -50,9 +42,10 @@ class App extends Component {
             }
           },
           {
-            name: 'radios2',
+            name: 'select',
             label: 'ERROR',
             type: 'select',
+            value: 'second2',
             options: [
               {
                 value: 'first2second2',
