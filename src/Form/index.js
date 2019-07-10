@@ -185,10 +185,17 @@ export default class Form extends Component {
       result = [];
     if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
       result = false;
-    if (field.type === 'select' && !field.multiple && field.options && field.options.length) {
-      result = (field.options.filter((item, index) => {
-        return item.selected || false
-      })[0] || field.options[0]).value;
+    if (
+      field.type === 'select' &&
+      !field.multiple &&
+      field.options &&
+      field.options.length
+    ) {
+      result = (
+        field.options.filter((item, index) => {
+          return item.selected || false;
+        })[0] || field.options[0]
+      ).value;
     }
     return field.hasOwnProperty('value') && field.value !== null
       ? field.value
