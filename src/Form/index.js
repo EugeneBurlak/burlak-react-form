@@ -183,7 +183,7 @@ export default class Form extends Component {
       result = [];
     if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
       result = false;
-    if (field.type === 'select' && !field.multiple){
+    if (field.type === 'select' && !field.multiple) {
       result = field.options[0].value;
     }
     return field.hasOwnProperty('value') && field.value !== null
@@ -340,7 +340,8 @@ export default class Form extends Component {
                 className = 'form-list-item',
                 switcherClassName = 'form-switcher form-switcher__' + item.type;
               if (checked) switcherClassName += ' form-switcher__checked';
-              if (switcher.inline || item.inline) className += ' form-list-item__inline';
+              if (switcher.inline || item.inline)
+                className += ' form-list-item__inline';
               return (
                 <label key={index} className={className}>
                   {switcher.htmlBefore && this.buildHtml(switcher.htmlBefore)}

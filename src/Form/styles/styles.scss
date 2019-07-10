@@ -93,7 +93,7 @@ $white: #ffffff;
   }
   &-html {
     font-size: 14px;
-    &__inline{
+    &__inline {
       display: inline-block;
       vertical-align: middle;
     }
@@ -185,7 +185,7 @@ $white: #ffffff;
       width: 100%;
       position: relative;
       padding: 8px 0;
-      &__inline{
+      &__inline {
         display: inline-block;
         vertical-align: top;
         width: auto;
@@ -372,7 +372,7 @@ $white: #ffffff;
       padding-right: 10px;
       text-overflow: ellipsis;
       margin: 0;
-      &-line{
+      &-line {
         overflow: hidden;
         text-overflow: ellipsis;
       }
