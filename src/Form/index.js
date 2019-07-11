@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './styles/styles.scss';
+
+let ref;
+
 export default class Form extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +51,7 @@ export default class Form extends Component {
   }
 
   componentDidMount() {
-    let files = this.refs.form.querySelectorAll('input[type="file"]');
+    let files = ref ? ref.querySelectorAll('input[type="file"]') : [];
     files.forEach((file, index) => {
       file.addEventListener('dragenter', this.onDragListener);
       file.addEventListener('dragover', this.onDragListener);
@@ -58,7 +61,7 @@ export default class Form extends Component {
   }
 
   componentWillUnmount() {
-    let files = this.refs.form.querySelectorAll('input[type="file"]');
+    let files = ref ? ref.querySelectorAll('input[type="file"]') : [];
     files.forEach((file, index) => {
       file.removeEventListener('dragenter', this.onDragListener);
       file.removeEventListener('dragover', this.onDragListener);
@@ -625,7 +628,10 @@ export default class Form extends Component {
     if (loading) formClass += ' form__submitting';
     return (
       <div className={className}>
-        <form ref="form" className={formClass} onSubmit={this.submit}>
+        <form
+          ref={inst => {
+            ref = inst;
+          }} className={formClass} onSubmit={this.submit}>
           {title && <div className="form-title">{title}</div>}
           {cols && cols.length
             ? cols.map((col, index) => {
