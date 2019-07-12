@@ -23,7 +23,7 @@ module.exports = {
     path: path.join(ROOT_DIR, buildType === 'package' ? '/package' : '/dist'),
     publicPath: JSON_CONFIG.publicPath,
     filename: "bundle.js",
-    libraryTarget: isDevelopment ? 'umd' : 'commonjs2'
+    libraryTarget: buildType === 'app' ? 'umd' : 'commonjs2'
   },
   module: {
     rules: [

@@ -631,7 +631,10 @@ export default class Form extends Component {
         <form
           ref={inst => {
             ref = inst;
-          }} className={formClass} onSubmit={this.submit}>
+          }}
+          className={formClass}
+          onSubmit={this.submit}
+        >
           {title && <div className="form-title">{title}</div>}
           {cols && cols.length
             ? cols.map((col, index) => {

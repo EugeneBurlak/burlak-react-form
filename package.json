@@ -1,11 +1,11 @@
 {
   "name": "burlak-react-form",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EugeneBurlak/burlak-react-form.git"
   },
-  "main": "dist/bundle.js",
+  "main": "package/bundle.js",
   "author": "Eugene Burlak <eugeneburlak@yandex.ru>",
   "license": "MIT",
   "description": "",
