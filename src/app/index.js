@@ -19,18 +19,10 @@ class App extends Component {
             label: 'ENTER_MESSAGE',
             type: 'radio',
             value: 'first',
-            inline: true,
-            resetButton: {
-              enable: true
-            },
             options: [
               {
                 value: 'first',
                 text: 'first text'
-              },
-              {
-                value: 'second',
-                text: 'second text'
               },
               {
                 value: 'third',
@@ -39,6 +31,25 @@ class App extends Component {
             ],
             validation: checked => {
               if (!checked.length) return 'REQUIRED';
+            }
+          },
+          {
+            name: 'option23',
+            type: 'hidden',
+            text: 'second text',
+            value: '1111',
+            label: '11'
+          },
+          {
+            name: 'second',
+            type: 'text',
+            text: 'second text',
+            value: '',
+            resetButton: {
+              enable: true
+            },
+            validation: (e) => {
+              if(e !== '1') return 'Req';
             }
           },
           {

@@ -81,12 +81,24 @@ export default class Form extends Component {
     return result;
   }
 
+  removeError(item){
+    let {fields} = this.state,
+      index = fields.findIndex((field, index) => {
+        return field.name === item.name;
+      });
+    fields[index].error = '';
+    this.setState({
+      fields
+    })
+  }
+
   inputChange(item, event) {
     let { values } = this.state,
       { value } = event.target;
     if (item.beforeChange && !item.beforeChange(value)) return false;
     values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
+    this.removeError(item);
     this.setState({
       values
     });
@@ -219,6 +231,7 @@ export default class Form extends Component {
     let { values } = this.state;
     values[item.name] = this.getDefaultValue(item);
     if (setState) this.setState({ values });
+    this.removeError(item);
     return values[item.name];
   }
 
@@ -492,6 +505,8 @@ export default class Form extends Component {
       case 'password':
         return this.buildInput(field);
       case 'email':
+        return this.buildInput(field);
+      case 'hidden':
         return this.buildInput(field);
       case 'tel':
         return this.buildInput(field);
