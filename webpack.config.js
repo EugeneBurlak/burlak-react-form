@@ -15,11 +15,12 @@ function getJSONConfig() {
 
 const JSON_CONFIG = getJSONConfig();
 const isDevelopment = process.env.WEBPACK_DEV_SERVER === "true";
+const buildType = process.env.BUILD_TYPE || 'app';
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: buildType === 'package' ? './src/package/index.js' : './src/app/index.js',
   output: {
-    path: path.join(ROOT_DIR, "/dist"),
+    path: path.join(ROOT_DIR, buildType === 'package' ? '/package' : '/dist'),
     publicPath: JSON_CONFIG.publicPath,
     filename: "bundle.js",
     libraryTarget: isDevelopment ? 'umd' : 'commonjs2'
@@ -48,9 +49,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
                 plugins: [
-                    autoprefixer({
-                        browsers:['ie >= 8', 'last 4 version']
-                    })
+                    autoprefixer()
                 ],
                 sourceMap: true
             }
@@ -73,23 +72,19 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
-    alias: {
-      components: ROOT_DIR + "/src/app/components",
-      containers: ROOT_DIR + "/src/app/containers",
-      actions: ROOT_DIR + "/src/app/actions",
-      store: ROOT_DIR + "/src/app/redux/store",
-      layouts: ROOT_DIR + "/src/app/layouts",
-    }
+    extensions: ['.js', '.jsx']
   },
   devServer: {
     historyApiFallback: true,
-  },
-  plugins: [
+  }
+};
+
+if(buildType === 'app'){
+  module.exports.plugins = [
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: "./src/app/index.html",
       APP_CONFIG: JSON.stringify(JSON_CONFIG),
       title: JSON_CONFIG.name
-    }),
+    })
   ]
-};
+}

@@ -11,8 +11,8 @@
   "description": "",
   "scripts": {
     "dev": "CONFIG_NAME='dev' webpack-dev-server --mode development --port 3001 --open --hot",
-    "stage": "CONFIG_NAME='dev' webpack --mode development",
-    "prod": "CONFIG_NAME='prod' webpack --mode production"
+    "build_app": "CONFIG_NAME='dev' webpack --mode production",
+    "build_package": "CONFIG_NAME='prod' BUILD_TYPE='package' webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
