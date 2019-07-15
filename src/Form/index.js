@@ -81,15 +81,15 @@ export default class Form extends Component {
     return result;
   }
 
-  removeError(item){
-    let {fields} = this.state,
+  removeError(item) {
+    let { fields } = this.state,
       index = fields.findIndex((field, index) => {
         return field.name === item.name;
       });
     fields[index].error = '';
     this.setState({
       fields
-    })
+    });
   }
 
   inputChange(item, event) {
@@ -131,8 +131,10 @@ export default class Form extends Component {
         };
       }
     }).then(resp => {
+      if (item.beforeChange && !item.beforeChange(resp)) return false;
       values[item.name] = resp;
       item.onChange && item.onChange(values[item.name], item);
+      this.removeError(item);
       this.setState({
         values
       });
@@ -142,13 +144,17 @@ export default class Form extends Component {
   selectChange(item, event) {
     let { values } = this.state,
       options = event.target.options,
-      array = [];
+      array = [],
+      result = false;
     for (let option of options) {
       if (option.selected) array.push(option.value);
     }
-    if (item.multiple) values[item.name] = array;
-    else values[item.name] = event.target.value;
+    if (item.multiple) result = array;
+    else result = event.target.value;
+    if (item.beforeChange && !item.beforeChange(result)) return false;
+    values[item.name] = result;
     item.onChange && item.onChange(values[item.name], item);
+    this.removeError(item);
     this.setState({
       values
     });
@@ -165,26 +171,35 @@ export default class Form extends Component {
         array.push(e.value);
       }
     });
+    if (item.beforeChange && !item.beforeChange(array)) return false;
     values[item.name] = array;
     item.onChange && item.onChange(values[item.name], item);
+    this.removeError(item);
     this.setState({
       values
     });
   }
 
   radioChange(item, radio, event) {
-    let { values } = this.state;
-    values[item.name] = radio.value;
+    let { values } = this.state,
+      { value } = radio;
+    if (item.beforeChange && !item.beforeChange(value)) return false;
+    values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
+    this.removeError(item);
     this.setState({
       values
     });
   }
 
   boolChange(item, event) {
-    let { values } = this.state;
-    values[item.name] = event.target.checked;
+    let { values } = this.state,
+      { chacked } = event.target;
+    if (item.beforeChange && !item.beforeChange(chacked))
+      return false;
+    values[item.name] = chacked;
     item.onChange && item.onChange(values[item.name], item);
+    this.removeError(item);
     this.setState({
       values
     });
