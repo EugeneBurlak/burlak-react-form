@@ -13,6 +13,7 @@ export default class Form extends Component {
       title: props.title,
       hash: this.generateHash(),
       values: {},
+      types: {},
       loading: false
     };
     this.submit = this.submit.bind(this);
@@ -30,13 +31,17 @@ export default class Form extends Component {
   }
 
   componentWillMount() {
-    let { fields, values } = this.state;
+    let { fields, values, types } = this.state;
     fields &&
       fields.map((item, index) => {
-        if (item.name) values[item.name] = this.getDefaultValue(item);
+        if (item.name) {
+          values[item.name] = this.getDefaultValue(item);
+          types[item.name] = item.type;
+        }
       });
     this.setState({
-      values
+      values,
+      types
     });
   }
 
@@ -194,10 +199,9 @@ export default class Form extends Component {
 
   boolChange(item, event) {
     let { values } = this.state,
-      { chacked } = event.target;
-    if (item.beforeChange && !item.beforeChange(chacked))
-      return false;
-    values[item.name] = chacked;
+      { checked } = event.target;
+    if (item.beforeChange && !item.beforeChange(checked)) return false;
+    values[item.name] = checked;
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
     this.setState({
@@ -206,17 +210,15 @@ export default class Form extends Component {
   }
 
   getDefaultValue(field) {
-    let result = '';
-    if (
-      field.type === 'checkbox' ||
-      field.type === 'select' ||
-      field.type === 'file'
-    )
+    let { types } = this.state,
+      result = '',
+      type = types[field.name] || field.type;
+    if (type === 'checkbox' || type === 'select' || type === 'file')
       result = [];
-    if ((field.type === 'checkbox' || field.type === 'radio') && !field.options)
+    if ((type === 'checkbox' || type === 'radio') && !field.options)
       result = false;
     if (
-      field.type === 'select' &&
+      type === 'select' &&
       !field.multiple &&
       field.options &&
       field.options.length
@@ -251,24 +253,39 @@ export default class Form extends Component {
   }
 
   buildInput(item) {
-    let className = 'form-control';
+    let { types, values } = this.state,
+      className = 'form-control',
+      classNameWrapper = 'form-control-wrapper-inner';
     if (item.type) className += ' form-control__' + item.type;
     if (item.width) className += ' form-control__' + item.width;
     if (item.className) className += ' ' + item.className;
+    if (item.switchButton)
+      classNameWrapper += ' form-control-wrapper-inner__with-button';
     return (
-      <input
-        id={item.name + '__' + this.state.hash}
-        className={className}
-        placeholder={item.placeholder}
-        disabled={item.disabled}
-        inputMode={item.inputmode || ''}
-        onChange={event => {
-          this.inputChange(item, event);
-        }}
-        type={item.type}
-        value={this.state.values[item.name] || ''}
-      />
+      <div className={classNameWrapper}>
+        <input
+          id={item.name + '__' + this.state.hash}
+          className={className}
+          placeholder={item.placeholder}
+          disabled={item.disabled}
+          inputMode={item.inputmode || ''}
+          onChange={event => {
+            this.inputChange(item, event);
+          }}
+          type={types[item.name]}
+          value={values[item.name] || ''}
+        />
+        {this.buildPasswordSwitch(item)}
+      </div>
     );
+  }
+
+  switchField(name, to) {
+    let { types } = this.state;
+    types[name] = to;
+    this.setState({
+      types
+    });
   }
 
   buildFile(item) {
@@ -554,7 +571,7 @@ export default class Form extends Component {
       <div className={className} title={item.title}>
         {this.switcher(item)}
         {this.buildError(item)}
-        {this.buildReset(item)}
+        {this.buildResetButton(item)}
       </div>
     );
   }
@@ -568,7 +585,7 @@ export default class Form extends Component {
   }
 
   buildField(field, index) {
-    let { loading } = this.state,
+    let { loading, types } = this.state,
       className = 'form-field';
     if (field.width) className += ' form-field__' + field.width;
     if (field.type) className += ' form-field__' + field.type;
@@ -627,7 +644,7 @@ export default class Form extends Component {
     return <div className="form-error">{field.error}</div>;
   }
 
-  buildReset(item) {
+  buildResetButton(item) {
     let resetButton = item && item.resetButton ? item.resetButton : false;
     return resetButton && resetButton.enable ? (
       <div
@@ -643,6 +660,56 @@ export default class Form extends Component {
         </svg>
       </div>
     ) : null;
+  }
+
+  buildPasswordSwitch(item) {
+    let { types } = this.state,
+      type = types[item.name];
+    if (item.type !== 'password' || !item.switchButton) return null;
+    return (
+      <div
+        className="form-switch"
+        onClick={e => {
+          e.preventDefault();
+          !item.disabled &&
+            this.switchField(
+              item.name,
+              type === 'password' ? 'text' : 'password'
+            );
+        }}
+      >
+        {type === 'password' ? (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482.8 482.8">
+            <path
+              d="M396,210.4h-7.1v-62.9C388.9,66.2,322.8,0,241.4,0C160.1,0,93.9,66.1,93.9,147.5c0,1.9,0.7,61.3,1.4,62.9
+			c2,4.9,6.2,3.6,11.8,3.6c5.1,0,11.3,0.5,13.6-3.6c1.1-2,0.1-60.5,0.1-62.9c0-66.4,54-120.5,120.5-120.5
+			c66.4,0,120.5,54,120.5,120.5v62.9c-88.9,0-177.7,0-266.6,0c-2.8,0-5.6,0-8.4,0c-1.7,0-11,0.2-18.4,7.6
+			c-4.7,4.7-7.7,11.2-7.7,18.4v168.1c0,43.1,35.1,78.2,78.2,78.2h204.9c43.1,0,78.2-35.1,78.2-78.2V236.5
+			C422,222.1,410.4,210.4,396,210.4z M395,404.6c0,28.2-22.9,51.2-51.2,51.2H139c-28.2,0-51.2-22.9-51.2-51.2V237.4H395V404.6
+			L395,404.6z"
+            />
+            <path
+              d="M241.4,399.1c27.9,0,50.5-22.7,50.5-50.5c0-27.9-22.7-50.5-50.5-50.5c-27.9,0-50.5,22.7-50.5,50.5
+			S213.6,399.1,241.4,399.1z M241.4,325c13,0,23.5,10.6,23.5,23.5s-10.5,23.6-23.5,23.6S218,361.5,218,348.6S228.4,325,241.4,325z"
+            />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482.8 482.8">
+            <path
+              d="M395.95,210.4h-7.1v-62.9c0-81.3-66.1-147.5-147.5-147.5c-81.3,0-147.5,66.1-147.5,147.5c0,7.5,6,13.5,13.5,13.5
+			s13.5-6,13.5-13.5c0-66.4,54-120.5,120.5-120.5c66.4,0,120.5,54,120.5,120.5v62.9h-275c-14.4,0-26.1,11.7-26.1,26.1v168.1
+			c0,43.1,35.1,78.2,78.2,78.2h204.9c43.1,0,78.2-35.1,78.2-78.2V236.5C422.05,222.1,410.35,210.4,395.95,210.4z M395.05,404.6
+			c0,28.2-22.9,51.2-51.2,51.2h-204.8c-28.2,0-51.2-22.9-51.2-51.2V237.4h307.2L395.05,404.6L395.05,404.6z"
+            />
+            <path
+              d="M241.45,399.1c27.9,0,50.5-22.7,50.5-50.5c0-27.9-22.7-50.5-50.5-50.5c-27.9,0-50.5,22.7-50.5,50.5
+			S213.55,399.1,241.45,399.1z M241.45,325c13,0,23.5,10.6,23.5,23.5s-10.5,23.6-23.5,23.6s-23.5-10.6-23.5-23.5
+			S228.45,325,241.45,325z"
+            />
+          </svg>
+        )}
+      </div>
+    );
   }
 
   render() {

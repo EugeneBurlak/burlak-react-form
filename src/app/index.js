@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Form from '../package';
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      type: 'text'
+    };
+  }
   render() {
     return (
       <Form
         styled
         autoReset={true}
+        ref="form"
         onSubmit={data => {
           console.log(data);
           return new Promise((resolve, reject) => {
@@ -16,20 +23,18 @@ class App extends Component {
         fields={[
           {
             name: 'checkbox',
-            label: 'ENTER_MESSAGE',
-            type: 'checkbox',
-            validation: checked => {
-              if (!checked) return 'REQUIRED';
-            }
+            label: this.state.type,
+            type: this.state.type,
+            text: 'Checkbox'
           },
           {
             name: 'second',
-            type: 'textarea',
-            text: 'second text',
+            type: 'password',
             value: '',
             resetButton: {
               enable: true
-            }
+            },
+            switchButton: true
           },
           {
             name: 'select',
