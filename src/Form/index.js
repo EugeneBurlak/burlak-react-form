@@ -579,11 +579,11 @@ export default class Form extends Component {
   buildHtml(data) {
     if (!data) return null;
     let html = data;
-    if(data instanceof Function){
+    if (data instanceof Function) {
       html = data(this);
     }
-    if(data.html){
-      if(data.html instanceof Function) html = data.html(this);
+    if (data.html) {
+      if (data.html instanceof Function) html = data.html(this);
       else html = data.html;
     }
     let className = 'form-html';
