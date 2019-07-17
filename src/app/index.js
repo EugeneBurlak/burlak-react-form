@@ -14,8 +14,8 @@ class App extends Component {
         styled
         autoReset={true}
         ref="form"
-        onSubmit={data => {
-          console.log(data);
+        onSubmit={(data, scope) => {
+          console.log(scope);
           return new Promise((resolve, reject) => {
             resolve();
           });
@@ -25,7 +25,19 @@ class App extends Component {
             name: 'checkbox',
             label: this.state.type,
             type: this.state.type,
-            text: 'Checkbox'
+            text: 'Checkbox',
+            htmlAfter: {
+              inline: true,
+              html: ((scope) => {
+                return(
+                  <div onClick={() => {
+                    console.log(scope)
+                  }}>
+                    dsds
+                  </div>
+                )
+              })()
+            }
           },
           {
             name: 'second',
@@ -35,6 +47,9 @@ class App extends Component {
               enable: true
             },
             switchButton: true
+          },{
+            type: 'button',
+
           },
           {
             name: 'select',
