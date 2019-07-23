@@ -47,11 +47,7 @@ class App extends Component {
               enable: true
             },
             switchButton: true
-          },{
-            type: 'button',
-
-          },
-          {
+          }, {
             name: 'select',
             label: 'ERROR',
             type: 'select',
