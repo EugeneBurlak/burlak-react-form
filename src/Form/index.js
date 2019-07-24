@@ -14,11 +14,30 @@ export default class Form extends Component {
       hash: this.generateHash(),
       values: {},
       types: {},
+      errors: {},
       loading: false
     };
     this.submit = this.submit.bind(this);
     this.switcher = this.switcher.bind(this);
     this.hash = this.generateHash();
+  }
+
+  getAllFields() {
+    let { fields } = this.state,
+      flatFields = [],
+      returnAllChilds = field => {
+        if (field.fields) {
+          field.fields.forEach((field, index) => {
+            returnAllChilds(field);
+          });
+        } else {
+          flatFields.push(field);
+        }
+      };
+    fields.forEach((field, index) => {
+      returnAllChilds(field);
+    });
+    return flatFields;
   }
 
   componentWillReceiveProps(props) {
@@ -31,17 +50,20 @@ export default class Form extends Component {
   }
 
   componentWillMount() {
-    let { fields, values, types } = this.state;
+    let { values, types, errors } = this.state,
+      fields = this.getAllFields();
     fields &&
       fields.map((item, index) => {
         if (item.name) {
           values[item.name] = this.getDefaultValue(item);
           types[item.name] = item.type;
+          errors[item.name] = '';
         }
       });
     this.setState({
       values,
-      types
+      types,
+      errors
     });
   }
 
@@ -87,13 +109,10 @@ export default class Form extends Component {
   }
 
   removeError(item) {
-    let { fields } = this.state,
-      index = fields.findIndex((field, index) => {
-        return field.name === item.name;
-      });
-    fields[index].error = '';
+    let { errors } = this.state;
+    delete errors[item.name];
     this.setState({
-      fields
+      errors
     });
   }
 
@@ -232,12 +251,11 @@ export default class Form extends Component {
 
   resetForm() {
     setTimeout(() => {
-      let { fields } = this.state,
-        values = {};
-      fields &&
-        fields.map((field, index) => {
-          if (field.name) values[field.name] = this.resetField(field, false);
-        });
+      let values = {},
+        fields = this.getAllFields();
+      fields.map((field, index) => {
+        if (field.name) values[field.name] = this.resetField(field, false);
+      });
       this.setState({
         values
       });
@@ -462,8 +480,8 @@ export default class Form extends Component {
   }
 
   validation() {
-    let { fields } = this.state,
-      errors = [];
+    let { errors } = this.state,
+      fields = this.getAllFields();
     fields.forEach((item, index) => {
       if (item.validation) {
         let error = item.validation(
@@ -471,17 +489,14 @@ export default class Form extends Component {
           this.state.values
         );
         if (error) {
-          fields[index]['error'] = error;
-          errors.push({
-            [item.name]: error
-          });
+          errors[item.name] = error;
         } else {
-          delete fields[index]['error'];
+          delete errors[item.name];
         }
       }
     });
     this.setState({
-      fields
+      errors
     });
     return errors;
   }
@@ -506,7 +521,7 @@ export default class Form extends Component {
       if (loading) return false;
       e && e.preventDefault();
       let errors = this.validation();
-      if (errors.length) return false;
+      if (Object.keys(errors).length) return false;
       this.beforeSubmit();
       let data = Object.assign({}, this.state.values),
         onSubmit = this.props.onSubmit && this.props.onSubmit(data, this, e);
@@ -558,6 +573,8 @@ export default class Form extends Component {
         return this.buildFile(field);
       case 'html':
         return this.buildHtml(field);
+      case 'fields':
+        return this.fieldsBuilder(field.fields);
     }
   }
 
@@ -618,13 +635,11 @@ export default class Form extends Component {
     if (col.width) className += ' form-col__' + col.width;
     return (
       <div key={index} className={className}>
-        {fields
-          .filter((item, index) => {
+        {this.fieldsBuilder(
+          fields.filter((item, index) => {
             return item.col && item.col === col.name;
           })
-          .map((item, index) => {
-            return this.buildField(item, index);
-          })}
+        )}
       </div>
     );
   }
@@ -648,8 +663,10 @@ export default class Form extends Component {
   }
 
   buildError(field) {
-    if (!field.error) return null;
-    return <div className="form-error">{field.error}</div>;
+    let { errors } = this.state,
+      error = errors[field.name];
+    if (!error) return null;
+    return <div className="form-error">{error}</div>;
   }
 
   buildResetButton(item) {
@@ -720,6 +737,18 @@ export default class Form extends Component {
     );
   }
 
+  colsBuilder(cols) {
+    return cols.map((col, index) => {
+      return this.buildCol(col, index);
+    });
+  }
+
+  fieldsBuilder(fields) {
+    return fields.map((item, index) => {
+      return this.buildField(item, index);
+    });
+  }
+
   render() {
     let {
         fields,
@@ -742,13 +771,8 @@ export default class Form extends Component {
         >
           {title && <div className="form-title">{title}</div>}
           {cols && cols.length
-            ? cols.map((col, index) => {
-                return this.buildCol(col, index);
-              })
-            : fields &&
-              fields.map((item, index) => {
-                return this.buildField(item, index);
-              })}
+            ? this.colsBuilder(cols)
+            : fields && this.fieldsBuilder(fields)}
         </form>
       </div>
     );
