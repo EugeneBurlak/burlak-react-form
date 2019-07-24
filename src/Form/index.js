@@ -57,7 +57,6 @@ export default class Form extends Component {
         if (item.name) {
           values[item.name] = this.getDefaultValue(item);
           types[item.name] = item.type;
-          errors[item.name] = '';
         }
       });
     this.setState({
@@ -690,10 +689,11 @@ export default class Form extends Component {
   buildPasswordSwitch(item) {
     let { types } = this.state,
       type = types[item.name];
-    if (item.type !== 'password' || !item.switchButton) return null;
+    if (item.type !== 'password' || !item.switchButton || !item.switchButton.enable) return null;
     return (
       <div
-        className="form-switch"
+        className={['form-switch', (item.switchButton && item.switchButton.className ? item.switchButton.className : '')].join(' ')}
+        title={item.switchButton && item.switchButton.title || ''}
         onClick={e => {
           e.preventDefault();
           !item.disabled &&
@@ -744,7 +744,7 @@ export default class Form extends Component {
   }
 
   fieldsBuilder(fields) {
-    return fields.map((item, index) => {
+    return fields && fields.map((item, index) => {
       return this.buildField(item, index);
     });
   }

@@ -15,67 +15,40 @@ class App extends Component {
         autoReset={true}
         ref="form"
         onSubmit={(data, scope) => {
-          console.log(scope);
-          return new Promise((resolve, reject) => {
-            resolve();
-          });
+          console.log(data);
         }}
         fields={[
           {
-            name: 'checkbox',
-            label: this.state.type,
-            type: this.state.type,
-            text: 'Checkbox',
-            htmlAfter: {
-              inline: true,
-              html: ((scope) => {
-                return(
-                  <div onClick={() => {
-                    console.log(scope)
-                  }}>
-                    dsds
-                  </div>
-                )
-              })()
+            name: 'text',
+            type: 'text',
+            validation: (e) => {
+              if(!e) return 's'
             }
           },
           {
-            name: 'second',
-            type: 'password',
-            value: '',
-            resetButton: {
-              enable: true
-            },
-            switchButton: true
-          }, {
-            name: 'select',
-            label: 'ERROR',
-            type: 'select',
-            resetButton: {
-              enable: true
-            },
-            options: [
+            type: 'fields',
+            fields: [
               {
-                value: 'first2second2',
-                text: 'first text2'
+                name: 'text2',
+                type: 'text'
               },
               {
-                value: 'second2',
-                text: 'second text2'
-              },
-              {
-                value: 'third2',
-                text: 'third text'
+                type: 'fields',
+                fields: [{
+                  type: 'text',
+                  name: 'text3'
+                },{
+                  type: 'fields',
+                  fields: [{
+                    name: 'text4',
+                    type: 'password',
+                    switchButton: {
+                      enable: true
+                    }
+                  }]
+                }]
               }
-            ],
-            validation: checked => {
-              if (!checked.length) return 'REQUIRED';
-            }
-          },
-          {
-            name: 'dsadadas',
-            type: 'file',
-            placeholder: '1'
+            ]
           },
           {
             value: 'SEND_MESSAGE',
