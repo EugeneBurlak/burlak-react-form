@@ -338,7 +338,7 @@ $text: #232732;
   }
 }
 
-.form__styled {
+.form__light {
   margin: 0 auto;
   max-width: 650px;
   a {
@@ -479,4 +479,9 @@ $text: #232732;
       border-top: 1px solid #dedede;
     }
   }
+}
+
+
+.form__modernDark{
+  background-color: #1d212c;
 }

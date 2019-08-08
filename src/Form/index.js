@@ -762,6 +762,27 @@ export default class Form extends Component {
     );
   }
 
+  buildTitle(title){
+    if(!title) return null;
+    return (
+      <div className="form-title">
+        {title.htmlBefore &&
+          <div className="form-title-html form-title-html__before">
+            {this.buildHtml(title.htmlBefore)}
+          </div>
+        }
+        <div className="form-title-text">
+          {title.text || title}
+        </div>
+        {title.htmlAfter &&
+          <div className="form-title-html form-title-html__after">
+            {this.buildHtml(title.htmlAfter)}
+          </div>
+        }
+      </div>
+    )
+  }
+
   render() {
     let {
         fields,
@@ -771,7 +792,7 @@ export default class Form extends Component {
         loading = false
       } = this.state,
       formClass = 'form';
-    if (this.props.styled) formClass += ' form__styled';
+    if (this.props.theme) formClass += ' form__'+this.props.theme;
     if (loading) formClass += ' form__submitting';
     return (
       <div className={className}>
@@ -782,7 +803,7 @@ export default class Form extends Component {
           className={formClass}
           onSubmit={this.submit}
         >
-          {title && <div className="form-title">{title}</div>}
+          {this.buildTitle(title)}
           {cols && cols.length
             ? this.colsBuilder(cols)
             : fields && this.fieldsBuilder(fields)}

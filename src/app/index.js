@@ -11,9 +11,22 @@ class App extends Component {
   render() {
     return (
       <Form
-        styled
+        theme="modernDark"
         autoReset={true}
         ref="form"
+        title={{
+          text: 'Login',
+          htmlAfter: (() => {
+            return(
+              <div>2</div>
+            )
+          })(),
+          htmlBefore: (() => {
+            return(
+              <div>1</div>
+            )
+          })()
+        }}
         onSubmit={(data, scope) => {
           console.log(data);
         }}
@@ -24,31 +37,12 @@ class App extends Component {
             validation: (e) => {
               if(!e) return 's'
             }
-          },
-          {
-            type: 'fields',
-            fields: [
-              {
-                name: 'text2',
-                type: 'text'
-              },
-              {
-                type: 'fields',
-                fields: [{
-                  type: 'text',
-                  name: 'text3'
-                },{
-                  type: 'fields',
-                  fields: [{
-                    name: 'text4',
-                    type: 'password',
-                    switchButton: {
-                      enable: true
-                    }
-                  }]
-                }]
-              }
-            ]
+          },{
+            type: 'password',
+            name: 'password',
+            switchButton: {
+              enable: true
+            }
           },
           {
             value: 'SEND_MESSAGE',
