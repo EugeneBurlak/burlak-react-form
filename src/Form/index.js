@@ -468,13 +468,15 @@ export default class Form extends Component {
   buildSubmit(item) {
     let { loading } = this.state;
     return (
-      <input
+      <button
         type={item.type}
         className={item.className}
         disabled={loading || item.disabled}
         hidden={item.hidden}
-        value={this.state.values[item.name] || item.value}
-      />
+      >
+        {this.state.values[item.name] || item.value}
+        <i className={['form-spinner', (loading ? 'form-spinner__active' : '')].join(' ')}></i>
+      </button>
     );
   }
 
@@ -583,6 +585,7 @@ export default class Form extends Component {
     if (resetButton && resetButton.enable)
       className += ' form-control-wrapper__with-reset';
     if (item.disabled) className += ' form-control-wrapper__disabled';
+    if (this.state.errors[item.name]) className += ' form-control-wrapper__error';
     return (
       <div className={className} title={item.title}>
         {this.switcher(item)}
@@ -804,9 +807,11 @@ export default class Form extends Component {
           onSubmit={this.submit}
         >
           {this.buildTitle(title)}
-          {cols && cols.length
-            ? this.colsBuilder(cols)
-            : fields && this.fieldsBuilder(fields)}
+          <div className="form-body">
+            {cols && cols.length
+              ? this.colsBuilder(cols)
+              : fields && this.fieldsBuilder(fields)}
+          </div>
         </form>
       </div>
     );

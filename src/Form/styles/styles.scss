@@ -1,11 +1,15 @@
 $error: #ff3433;
-$green: #30b973;
+$green: #0cb566;
 $white: #ffffff;
 $text: #232732;
+
+@import 'fonts/fonts.scss';
+
 .form {
   font-size: 0;
   margin: 0 -15px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Lato, Arial, Helvetica, sans-serif;
+  font-weight: 400;
   color: $text;
   &,
   & * {
@@ -483,5 +487,161 @@ $text: #232732;
 
 
 .form__modernDark{
-  background-color: #1d212c;
+  background-color: #2b2a49;
+  color: $white;
+  margin: 0;
+  .form{
+    &-title{
+      font-size: 0;
+      text-align: left;
+      padding: 40px 50px;
+      border-bottom: 1px solid #1f1f2b;
+      &-html,
+      &-text{
+        display: inline-block;
+        vertical-align: middle;
+        width: 50%;
+        font-size: 14px;
+      }
+      &-text{
+        font-size: 30px;
+      }
+      &-html{
+        &__before{
+          width: 100%;
+        }
+        &__after{
+          text-align: right;
+        }
+      }
+    }
+    &-body{
+      padding: 25px 50px;
+    }
+    &-label{
+      font-size: 14px;
+      font-weight: 600;
+      &, & label{
+        color: $white;
+      }
+      label{
+        margin-bottom: 10px;
+      }
+    }
+    &-field{
+      padding: 0 15px;
+      margin: 15px 0;
+      input{
+        background-color: #1e1d2f;
+        border-radius: 5px;
+        line-height: 1em;
+        color: $white;
+        font-weight: 600;
+        font-size: 18px;
+        padding: 20px;
+        border: none;
+        width: 100%;
+        display: block;
+        padding-right: 48px;
+        height: auto;
+      }
+      &__submit{
+        button{
+          border-radius: 5px;
+          color: #fff;
+          background-color: #0cb566;
+          text-align: center;
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 1em;
+          border: none;
+          width: 100%;
+          display: block;
+          padding: 20px;
+          height: auto;
+          overflow: hidden;
+          position: relative;
+          &:hover{
+            box-shadow: none;
+          }
+        }
+        &__loading{
+          button{
+            &[disabled]{
+              opacity: 1;
+            }
+            color: transparent;
+          }
+        }
+      }
+    }
+    &-spinner{
+      position: absolute;
+      display: block;
+      top: 50%;
+      left: 50%;
+      width: 28px;
+      height: 28px;
+      margin: -14px 0 0 -14px;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+      transform: scale(0);
+      &:after{
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 3px solid $white;
+        border-right-color: transparent;
+        border-radius: 50%;
+        margin: -3px 0 0 -3px;
+      }
+      &__active{
+        transform: scale(1);
+        visibility: visible;
+        opacity: 1;
+        &:after{
+          animation: spin 0.6s linear infinite;
+        }
+      }
+    }
+    &-switch{
+      svg{
+        path{
+          fill: #706d92;
+        }
+      }
+    }
+    &-switcher{
+      padding-left: 40px;
+      cursor: pointer;
+      &-pointer{
+        border: 2px solid #706d92;
+        background-color: #2b2a49;
+        border-radius: 3px;
+        width: 26px;
+        height: 26px;
+        &:after{
+          border-bottom: 2px solid #706d92;
+          border-right: 2px solid #706d92;
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg)
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
 }

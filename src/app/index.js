@@ -9,6 +9,7 @@ class App extends Component {
     };
   }
   render() {
+    let {error} = this.state;
     return (
       <Form
         theme="modernDark"
@@ -20,34 +21,51 @@ class App extends Component {
             return(
               <div>2</div>
             )
-          })(),
-          htmlBefore: (() => {
-            return(
-              <div>1</div>
-            )
           })()
         }}
         onSubmit={(data, scope) => {
           console.log(data);
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve('Error!');
+            }, 3000);
+          }).then(() => {
+
+          }).catch((error) => {
+            this.setState({
+              error: error
+            })
+          })
         }}
         fields={[
           {
             name: 'text',
             type: 'text',
-            validation: (e) => {
-              if(!e) return 's'
-            }
+            label: 'Name'
           },{
+            label: 'Password',
             type: 'password',
             name: 'password',
+            validation: (e) => {
+              if(!e) return 's'
+            },
             switchButton: {
               enable: true
             }
           },
           {
-            value: 'SEND_MESSAGE',
+            value: 'Sign in',
             type: 'submit',
-            col: 'second'
+            htmlAfter: (() => {
+              if(!error) return null;
+              return (
+                <div className="form-error">{error}</div>
+              )
+            })()
+          },{
+            type: 'checkbox',
+            text: 'Remeber me',
+            name: 'remember_me'
           }
         ]}
       />
