@@ -379,7 +379,7 @@ $text: #232732;
           &-control-wrapper {
             display: inline-block;
             width: auto;
-            input {
+            button {
               background-color: $green;
               border-color: $green;
               border-radius: 5px;
@@ -485,53 +485,55 @@ $text: #232732;
   }
 }
 
-
-.form__modernDark{
+.form__modernDark {
   background-color: #2b2a49;
   color: $white;
   margin: 0;
-  .form{
-    &-title{
+  .form {
+    &-title {
       font-size: 0;
       text-align: left;
       padding: 40px 50px;
       border-bottom: 1px solid #1f1f2b;
       &-html,
-      &-text{
+      &-text {
         display: inline-block;
         vertical-align: middle;
         width: 50%;
         font-size: 14px;
       }
-      &-text{
+      &-text {
         font-size: 30px;
       }
-      &-html{
-        &__before{
+      &-html {
+        &__before {
           width: 100%;
         }
-        &__after{
+        &__after {
           text-align: right;
         }
       }
     }
-    &-body{
-      padding: 25px 50px;
+    &-body {
+      padding: 25px 35px;
     }
-    &-label{
+    &-label {
       font-size: 14px;
       font-weight: 600;
-      &, & label{
+      &,
+      & label {
         color: $white;
       }
-      label{
+      label {
         margin-bottom: 10px;
       }
     }
-    &-field{
+    &-field {
       padding: 0 15px;
       margin: 15px 0;
-      input{
+      input,
+      textarea,
+      select {
         background-color: #1e1d2f;
         border-radius: 5px;
         line-height: 1em;
@@ -542,11 +544,23 @@ $text: #232732;
         border: none;
         width: 100%;
         display: block;
-        padding-right: 48px;
         height: auto;
       }
-      &__submit{
-        button{
+      textarea {
+        height: 100px;
+      }
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        height: 61px;
+        background-image: url(../styles/images/arrow-down-green.svg);
+        background-position: 98% center;
+        background-repeat: no-repeat;
+        background-size: 16px 16px;
+      }
+      &__submit {
+        button {
           border-radius: 5px;
           color: #fff;
           background-color: #0cb566;
@@ -561,13 +575,13 @@ $text: #232732;
           height: auto;
           overflow: hidden;
           position: relative;
-          &:hover{
+          &:hover {
             box-shadow: none;
           }
         }
-        &__loading{
-          button{
-            &[disabled]{
+        &__loading {
+          button {
+            &[disabled] {
               opacity: 1;
             }
             color: transparent;
@@ -575,7 +589,7 @@ $text: #232732;
         }
       }
     }
-    &-spinner{
+    &-spinner {
       position: absolute;
       display: block;
       top: 50%;
@@ -587,7 +601,7 @@ $text: #232732;
       visibility: hidden;
       transition: 0.3s;
       transform: scale(0);
-      &:after{
+      &:after {
         content: '';
         display: block;
         position: absolute;
@@ -598,34 +612,164 @@ $text: #232732;
         border-radius: 50%;
         margin: -3px 0 0 -3px;
       }
-      &__active{
+      &__active {
         transform: scale(1);
         visibility: visible;
         opacity: 1;
-        &:after{
+        &:after {
           animation: spin 0.6s linear infinite;
         }
       }
     }
-    &-switch{
-      svg{
-        path{
+    &-switch {
+      svg {
+        path {
           fill: #706d92;
         }
       }
     }
-    &-switcher{
+    &-switcher {
       padding-left: 40px;
       cursor: pointer;
-      &-pointer{
+      &-pointer {
         border: 2px solid #706d92;
         background-color: #2b2a49;
         border-radius: 3px;
         width: 26px;
         height: 26px;
-        &:after{
+        &:after {
           border-bottom: 2px solid #706d92;
           border-right: 2px solid #706d92;
+          width: 20%;
+          height: 40%;
+        }
+      }
+      &__radio {
+        .form {
+          &-switcher {
+            &-pointer {
+              border-radius: 50%;
+              box-shadow: inset 0 0 0 15px #2b2a49;
+              background-color: #706d92;
+              &:after {
+                border: none;
+                width: 40%;
+                height: 40%;
+                background-color: #706d92;
+                display: none;
+              }
+            }
+          }
+        }
+        &.form {
+          &-switcher__checked {
+            .form-switcher-pointer {
+              box-shadow: inset 0 0 0 7px #2b2a49;
+            }
+          }
+        }
+      }
+    }
+    &-list {
+      &-item {
+        padding: 10px 0;
+      }
+      &__inline {
+        .form-list-item {
+          margin-right: 15px;
+        }
+      }
+    }
+    &-reset {
+      &:hover {
+        background-color: #0cb566;
+        svg {
+          fill: #fff;
+        }
+      }
+    }
+    &-control-wrapper-inner {
+      &__with-status {
+        input,
+        textarea,
+        select {
+          padding-right: 40px;
+        }
+        position: relative;
+        overflow: hidden;
+        &:after,
+        &:before {
+          content: '';
+          display: block;
+          position: absolute;
+          top: 50%;
+          margin-top: -9px;
+          width: 18px;
+          height: 18px;
+          background-size: 100% 100%;
+          right: 10px;
+          background-image: url(./images/error.svg);
+          transform: translateX(200%);
+          transition: 0.3s;
+        }
+      }
+      &:after {
+        background-image: url(./images/success.svg);
+      }
+      &__error {
+        &:before {
+          transform: translateX(0);
+        }
+      }
+      &__success {
+        &:after {
+          transform: translateX(0);
+        }
+      }
+      &__with-button {
+        &.form-control-wrapper-inner {
+          &__error {
+            &:before {
+              transform: translateX(-160%);
+            }
+          }
+          &__success {
+            &:after {
+              transform: translateX(-160%);
+            }
+          }
+        }
+        .form-control {
+          padding-right: 70px;
+        }
+      }
+    }
+    &-field {
+      &__select {
+        .form-control-wrapper-inner {
+          &__with-status {
+            select {
+              padding-right: 70px;
+            }
+            &.form-control-wrapper-inner {
+              &__error {
+                &:before {
+                  transform: translateX(-160%);
+                }
+              }
+              &__success {
+                &:after {
+                  transform: translateX(-160%);
+                }
+              }
+            }
+          }
+        }
+      }
+      &__radio,
+      &__checkbox{
+        .form-control-wrapper-inner__with-status{
+          padding-right: 40px;
         }
       }
     }
@@ -636,12 +780,12 @@ $text: #232732;
   0% {
     -webkit-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
-    transform: rotate(0deg)
+    transform: rotate(0deg);
   }
 
   100% {
     -webkit-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
-    transform: rotate(360deg)
+    transform: rotate(360deg);
   }
 }

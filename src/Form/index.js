@@ -271,15 +271,12 @@ export default class Form extends Component {
 
   buildInput(item) {
     let { types, values } = this.state,
-      className = 'form-control',
-      classNameWrapper = 'form-control-wrapper-inner';
+      className = 'form-control';
     if (item.type) className += ' form-control__' + item.type;
     if (item.width) className += ' form-control__' + item.width;
     if (item.className) className += ' ' + item.className;
-    if (item.switchButton)
-      classNameWrapper += ' form-control-wrapper-inner__with-button';
     return (
-      <div className={classNameWrapper}>
+      <React.Fragment>
         <input
           id={item.name + '__' + this.state.hash}
           className={className}
@@ -293,7 +290,7 @@ export default class Form extends Component {
           value={values[item.name] || ''}
         />
         {this.buildPasswordSwitch(item)}
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -475,20 +472,22 @@ export default class Form extends Component {
         hidden={item.hidden}
       >
         {this.state.values[item.name] || item.value}
-        <i className={['form-spinner', (loading ? 'form-spinner__active' : '')].join(' ')}></i>
+        <i
+          className={[
+            'form-spinner',
+            loading ? 'form-spinner__active' : ''
+          ].join(' ')}
+        />
       </button>
     );
   }
 
   validation() {
-    let { errors } = this.state,
+    let { errors, values } = this.state,
       fields = this.getAllFields();
     fields.forEach((item, index) => {
       if (item.validation) {
-        let error = item.validation(
-          this.state.values[item.name],
-          this.state.values
-        );
+        let error = item.validation(values[item.name], values);
         if (error) {
           errors[item.name] = error;
         } else {
@@ -579,16 +578,38 @@ export default class Form extends Component {
     }
   }
 
+  getFieldStatus(item) {
+    let { errors, values } = this.state,
+      { name } = item,
+      fields = this.getAllFields(),
+      index = fields.findIndex((item, index) => {
+        return item.name === name;
+      }),
+      validation = fields[index].validation;
+    if(!values[name]) return false;
+    if ((validation && validation(values[name], values)) || errors[name]) return 'error';
+    if (values[name]) return 'success';
+    return false;
+  }
+
   buildControl(item) {
     let className = 'form-control-wrapper',
-      resetButton = item && item.resetButton ? item.resetButton : false;
+      classNameInner = 'form-control-wrapper-inner',
+      resetButton = item && item.resetButton ? item.resetButton : false,
+      fieldStatus = this.getFieldStatus(item);
     if (resetButton && resetButton.enable)
       className += ' form-control-wrapper__with-reset';
     if (item.disabled) className += ' form-control-wrapper__disabled';
-    if (this.state.errors[item.name]) className += ' form-control-wrapper__error';
+    if(item.statusIcon && item.statusIcon.enable) classNameInner += ' form-control-wrapper-inner__with-status'
+    if (fieldStatus) {
+      className += ' form-control-wrapper__' + fieldStatus;
+      classNameInner += ' form-control-wrapper-inner__' + fieldStatus;
+    }
+    if (item.switchButton && item.switchButton.enable)
+      classNameInner += ' form-control-wrapper-inner__with-button';
     return (
       <div className={className} title={item.title}>
-        {this.switcher(item)}
+        <div className={classNameInner}>{this.switcher(item)}</div>
         {this.buildError(item)}
         {this.buildResetButton(item)}
       </div>
@@ -765,25 +786,23 @@ export default class Form extends Component {
     );
   }
 
-  buildTitle(title){
-    if(!title) return null;
+  buildTitle(title) {
+    if (!title) return null;
     return (
       <div className="form-title">
-        {title.htmlBefore &&
+        {title.htmlBefore && (
           <div className="form-title-html form-title-html__before">
             {this.buildHtml(title.htmlBefore)}
           </div>
-        }
-        <div className="form-title-text">
-          {title.text || title}
-        </div>
-        {title.htmlAfter &&
+        )}
+        <div className="form-title-text">{title.text || title}</div>
+        {title.htmlAfter && (
           <div className="form-title-html form-title-html__after">
             {this.buildHtml(title.htmlAfter)}
           </div>
-        }
+        )}
       </div>
-    )
+    );
   }
 
   render() {
@@ -795,7 +814,7 @@ export default class Form extends Component {
         loading = false
       } = this.state,
       formClass = 'form';
-    if (this.props.theme) formClass += ' form__'+this.props.theme;
+    if (this.props.theme) formClass += ' form__' + this.props.theme;
     if (loading) formClass += ' form__submitting';
     return (
       <div className={className}>

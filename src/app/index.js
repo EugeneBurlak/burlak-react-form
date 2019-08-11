@@ -41,17 +41,42 @@ class App extends Component {
           {
             name: 'text',
             type: 'text',
-            label: 'Name'
+            label: 'Name',
+            validation: (e) => {
+              if(e !== '2') return 'Need 2'
+            },
+            statusIcon: {
+              enable: true
+            }
           },{
             label: 'Password',
             type: 'password',
             name: 'password',
             validation: (e) => {
-              if(!e) return 's'
+              if(e !== '2') return 'Need 2'
             },
             switchButton: {
+              enable: true,
+            }
+          },{
+            type: 'textarea',
+            name: '1',
+            resetButton: {
               enable: true
             }
+          },{
+            type: 'select',
+            name: 'select',
+            options: [{
+              text: '221',
+              value: ''
+            },{
+              text: '1',
+              value: '1'
+            },{
+              text: '2',
+              value: '2 '
+            }]
           },
           {
             value: 'Sign in',
@@ -62,6 +87,17 @@ class App extends Component {
                 <div className="form-error">{error}</div>
               )
             })()
+          },{
+            type: 'radio',
+            name: '22',
+            inline: true,
+            options: [{
+              value: '1',
+              text: '2'
+            },{
+              value: '2',
+              text: '2'
+            }]
           },{
             type: 'checkbox',
             text: 'Remeber me',
