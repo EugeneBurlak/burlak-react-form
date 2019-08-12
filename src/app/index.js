@@ -9,7 +9,7 @@ class App extends Component {
     };
   }
   render() {
-    let {error} = this.state;
+    let { error } = this.state;
     return (
       <Form
         theme="modernDark"
@@ -18,87 +18,101 @@ class App extends Component {
         title={{
           text: 'Login',
           htmlAfter: (() => {
-            return(
-              <div>2</div>
-            )
+            return <div>2</div>;
           })()
         }}
         onSubmit={(data, scope) => {
-          console.log(data);
           return new Promise((resolve, reject) => {
             setTimeout(() => {
-              resolve('Error!');
+              if (error) resolve('Success');
+              else reject('Error!');
             }, 3000);
-          }).then(() => {
-
-          }).catch((error) => {
-            this.setState({
-              error: error
-            })
           })
+            .then(() => {
+              this.setState({
+                error: error
+              });
+            })
+            .catch(error => {
+              this.setState({
+                error: error
+              });
+            });
         }}
         fields={[
           {
             name: 'text',
             type: 'text',
             label: 'Name',
-            validation: (e) => {
-              if(e !== '2') return 'Need 2'
+            validation: e => {
+              if (e !== '2') return 'Need 2';
             },
             statusIcon: {
               enable: true
             }
-          },{
+          },
+          {
             label: 'Password',
             type: 'password',
             name: 'password',
-            validation: (e) => {
-              if(e !== '2') return 'Need 2'
+            validation: e => {
+              if (e !== '2') return 'Need 2';
             },
             switchButton: {
-              enable: true,
+              enable: true
             }
-          },{
+          },
+          {
             type: 'textarea',
             name: '1',
             resetButton: {
               enable: true
             }
-          },{
+          },
+          {
             type: 'select',
             name: 'select',
-            options: [{
-              text: '221',
-              value: ''
-            },{
-              text: '1',
-              value: '1'
-            },{
-              text: '2',
-              value: '2 '
-            }]
+            options: [
+              {
+                text: '221',
+                value: ''
+              },
+              {
+                text: '1',
+                value: '1'
+              },
+              {
+                text: '2',
+                value: '2 '
+              }
+            ]
           },
           {
             value: 'Sign in',
             type: 'submit',
-            htmlAfter: (() => {
-              if(!error) return null;
-              return (
-                <div className="form-error">{error}</div>
-              )
-            })()
-          },{
+            htmlAfter: {
+              html: () => {
+                return error ? error : null;
+              },
+              error: true
+            }
+          },
+          {
             type: 'radio',
             name: '22',
             inline: true,
-            options: [{
-              value: '1',
-              text: '2'
-            },{
-              value: '2',
-              text: '2'
-            }]
-          },{
+            options: [
+              {
+                value: '1',
+                text: '2'
+              },
+              {
+                value: '2',
+                text: '2'
+              }
+            ]
+          },
+          {
             type: 'checkbox',
             text: 'Remeber me',
             name: 'remember_me'

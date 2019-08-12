@@ -586,8 +586,9 @@ export default class Form extends Component {
         return item.name === name;
       }),
       validation = fields[index].validation;
-    if(!values[name]) return false;
-    if ((validation && validation(values[name], values)) || errors[name]) return 'error';
+    if (!values[name]) return false;
+    if ((validation && validation(values[name], values)) || errors[name])
+      return 'error';
     if (values[name]) return 'success';
     return false;
   }
@@ -600,7 +601,8 @@ export default class Form extends Component {
     if (resetButton && resetButton.enable)
       className += ' form-control-wrapper__with-reset';
     if (item.disabled) className += ' form-control-wrapper__disabled';
-    if(item.statusIcon && item.statusIcon.enable) classNameInner += ' form-control-wrapper-inner__with-status'
+    if (item.statusIcon && item.statusIcon.enable)
+      classNameInner += ' form-control-wrapper-inner__with-status';
     if (fieldStatus) {
       className += ' form-control-wrapper__' + fieldStatus;
       classNameInner += ' form-control-wrapper-inner__' + fieldStatus;
@@ -619,6 +621,7 @@ export default class Form extends Component {
   buildHtml(data) {
     if (!data) return null;
     let html = data;
+
     if (data instanceof Function) {
       html = data(this);
     }
@@ -626,10 +629,14 @@ export default class Form extends Component {
       if (data.html instanceof Function) html = data.html(this);
       else html = data.html;
     }
+    if (data instanceof Object && !(data instanceof Function) && !data.html) {
+      html = null;
+    }
     let className = 'form-html';
     if (data.inline) className += ' form-html__inline';
     if (data.className) className += ' ' + data.className;
-    return <div className={className}>{html}</div>;
+    if (data.error) className += ' form-error';
+    return html ? <div className={className}>{html}</div> : null;
   }
 
   buildField(field, index) {
