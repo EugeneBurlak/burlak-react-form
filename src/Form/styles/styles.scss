@@ -555,7 +555,8 @@ $text: #232732;
         appearance: none;
         height: 61px;
         background-image: url(../styles/images/arrow-down-green.svg);
-        background-position: 98% center;
+        background-position: center center;
+        background-position-x: calc(100% - 10px);
         background-repeat: no-repeat;
         background-size: 16px 16px;
       }
