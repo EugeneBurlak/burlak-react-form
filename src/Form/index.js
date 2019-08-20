@@ -612,7 +612,7 @@ export default class Form extends Component {
       index = fields.findIndex((item, index) => {
         return item.name === name;
       }),
-      validation = fields[index].validation;
+      validation = index && fields[index] && fields[index].validation || false;
     if (!values[name]) return false;
     if ((validation && validation(values[name], values)) || errors[name])
       return 'error';
