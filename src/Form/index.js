@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { IMaskInput } from 'react-imask';
 import './styles/styles.scss';
 
 let ref;
@@ -119,6 +120,7 @@ export default class Form extends Component {
     let { values } = this.state,
       { value } = event.target;
     if (item.beforeChange && !item.beforeChange(value)) return false;
+    if (item.mixinValue) value = item.mixinValue(value);
     values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
@@ -545,6 +547,29 @@ export default class Form extends Component {
     });
   }
 
+  buildMask(item) {
+    let { types, values } = this.state,
+      className = 'form-control';
+    if (item.type) className += ' form-control__' + item.type;
+    if (item.width) className += ' form-control__' + item.width;
+    if (item.className) className += ' ' + item.className;
+    return (
+      <IMaskInput
+        mask={item.mask}
+        value={values[item.name]}
+        className={className}
+        onAccept={(value, mask) => {
+          console.log(value);
+          this.inputChange(item, {
+            target: {
+              value: value
+            }
+          });
+        }}
+      />
+    );
+  }
+
   switcher(field) {
     switch (field.type) {
       case 'text':
@@ -575,6 +600,8 @@ export default class Form extends Component {
         return this.buildHtml(field);
       case 'fields':
         return this.fieldsBuilder(field.fields);
+      case 'mask':
+        return this.buildMask(field);
     }
   }
 
