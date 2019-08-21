@@ -11,6 +11,7 @@ $text: #232732;
   font-family: Lato, Arial, Helvetica, sans-serif;
   font-weight: 400;
   color: $text;
+  text-align: left;
   &,
   & * {
     box-sizing: border-box;
@@ -481,6 +482,25 @@ $text: #232732;
   &__edit {
     .form-field__submit {
       border-top: 1px solid #dedede;
+    }
+  }
+  .form {
+    &-field {
+      &__fields {
+        .form-field {
+          border-bottom: none;
+          .form-control-wrapper {
+            padding-left: 0;
+            padding-right: 10px;
+          }
+          &:nth-child(even) {
+            .form-control-wrapper {
+              padding-left: 10px;
+              padding-right: 0;
+            }
+          }
+        }
+      }
     }
   }
 }

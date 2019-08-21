@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { IMaskInput } from 'react-imask';
 import './styles/styles.scss';
-
+import { IMaskInput } from 'react-imask';
 let ref;
 
 export default class Form extends Component {
@@ -119,7 +118,8 @@ export default class Form extends Component {
   inputChange(item, event) {
     let { values } = this.state,
       { value } = event.target;
-    if (item.beforeChange && !item.beforeChange(value)) return false;
+    if (item.beforeChange && !item.beforeChange(value))
+      value = values[item.name];
     if (item.mixinValue) value = item.mixinValue(value);
     values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
@@ -558,8 +558,8 @@ export default class Form extends Component {
         mask={item.mask}
         value={values[item.name]}
         className={className}
+        placeholder={item.placeholder}
         onAccept={(value, mask) => {
-          console.log(value);
           this.inputChange(item, {
             target: {
               value: value
@@ -612,7 +612,8 @@ export default class Form extends Component {
       index = fields.findIndex((item, index) => {
         return item.name === name;
       }),
-      validation = index && fields[index] && fields[index].validation || false;
+      validation =
+        (index && fields[index] && fields[index].validation) || false;
     if (!values[name]) return false;
     if ((validation && validation(values[name], values)) || errors[name])
       return 'error';
