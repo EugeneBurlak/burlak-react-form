@@ -341,6 +341,7 @@ $text: #232732;
   .form-field__half {
     width: 100%;
   }
+  
 }
 
 .form__light {
@@ -487,17 +488,15 @@ $text: #232732;
   .form {
     &-field {
       &__fields {
+        padding: 0;
+        & > .form-control-wrapper > .form-control-wrapper-inner{
+          margin: 0 -10px;
+        }
         .form-field {
           border-bottom: none;
           .form-control-wrapper {
-            padding-left: 0;
+            padding-left: 10px;
             padding-right: 10px;
-          }
-          &:nth-child(even) {
-            .form-control-wrapper {
-              padding-left: 10px;
-              padding-right: 0;
-            }
           }
         }
       }

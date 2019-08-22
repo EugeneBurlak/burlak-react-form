@@ -44,6 +44,7 @@ class App extends Component {
             name: 'text',
             type: 'text',
             label: 'Name',
+            mask: '000',
             validation: e => {
               if (e !== '2') return 'Need 2';
             },
