@@ -34,7 +34,12 @@ class App extends Component {
             name: 'text',
             type: 'text',
             label: 'Name',
-            mask: '+0(000)000-00-00',
+            mask: '0000',
+            mixinValue: value => {
+              let int = parseInt(value);
+              if (int > new Date().getFullYear()) return new Date().getFullYear()+'';
+              return value;
+            },
             statusIcon: {
               enable: true
             }
