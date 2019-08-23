@@ -121,6 +121,7 @@ export default class Form extends Component {
     if (item.beforeChange && !item.beforeChange(value))
       value = values[item.name];
     if (item.mixinValue) value = item.mixinValue(value);
+    if (item.mask) value = this.checkMask(value, item.mask);
     values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
@@ -820,6 +821,117 @@ export default class Form extends Component {
       })
     );
   }
+
+  checkMaskChar(char, valueChar, nextChar) {
+    let result = '',
+      specChars = [
+        '+',
+        '-',
+        '(',
+        ')',
+        '[',
+        ']',
+        '{',
+        '}',
+        '.',
+        ',',
+        '\\',
+        '/',
+        ' ',
+        '_',
+        '=',
+        '~',
+        '`',
+        '|',
+        "'",
+        '"'
+      ];
+    if (specChars.indexOf(char) >= 0) {
+      result += char;
+      if (nextChar) {
+        result += this.checkMaskChar(nextChar, valueChar);
+      }
+    }
+    if (char === '0') {
+      let pattern = /^[0-9]+$/;
+      if (pattern.test(valueChar)) result += valueChar;
+    }
+    if (char === 'A' && !parseInt(valueChar)) {
+      let pattern = /^[A-Za-zА-Яа-я]+$/;
+      if (pattern.test(valueChar)) result += valueChar;
+    }
+    return result;
+  }
+
+  checkMask(value, mask) {
+    let newValue = '';
+    mask = mask.split('');
+    for (let index in mask) {
+      index = parseInt(index);
+      if (!value[index]) continue;
+      let char = mask[index].toString(),
+        nextChar = mask[index + 1] ? mask[index + 1].toString() : false,
+        valueChar = value[index];
+      newValue += this.checkMaskChar(char, valueChar, nextChar);
+    }
+    return newValue;
+  }
+
+  // checkMaskChar(value, mask, index) {
+  //   console.log(mask, mask[index]);
+  //   let char = mask[index].toString(),
+  //     nextChar = mask[index + 1] ? mask[index + 1].toString() : false,
+  //     valueChar = value[index];
+  //   let result = '',
+  //     specChars = [
+  //       '+',
+  //       '-',
+  //       '(',
+  //       ')',
+  //       '[',
+  //       ']',
+  //       '{',
+  //       '}',
+  //       '.',
+  //       ',',
+  //       '\\',
+  //       '/',
+  //       ' ',
+  //       '_',
+  //       '=',
+  //       '~',
+  //       '`',
+  //       '|',
+  //       "'",
+  //       '"'
+  //     ];
+  //   if (specChars.indexOf(char) >= 0) {
+  //     result += char;
+  //     if (nextChar) {
+  //       result += this.checkMaskChar(nextChar, valueChar, index+1);
+  //     }
+  //   }
+  //   if (char === '0') {
+  //     let pattern = /^[0-9]+$/;
+  //     if (pattern.test(valueChar)) result += valueChar;
+  //   }
+  //   if (char === 'A' && !parseInt(valueChar)) {
+  //     let pattern = /^[A-Za-zА-Яа-я]+$/;
+  //     if (pattern.test(valueChar)) result += valueChar;
+  //   }
+  //   return result;
+  // }
+
+  // checkMask(value, mask) {
+  //   let newValue = '';
+  //   mask = mask.split('');
+  //   for (let index in mask) {
+  //     index = parseInt(index);
+  //     if (!value[index]) return;
+  //     newValue += this.checkMaskChar(value, mask, index);
+  //   }
+  //   return newValue;
+  // }
 
   buildTitle(title) {
     if (!title) return null;

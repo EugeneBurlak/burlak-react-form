@@ -12,7 +12,7 @@ class App extends Component {
     let { error } = this.state;
     return (
       <Form
-        theme="modernDark"
+        theme="light"
         autoReset={true}
         ref="form"
         title={{
@@ -24,69 +24,20 @@ class App extends Component {
         onSubmit={(data, scope) => {
           return new Promise((resolve, reject) => {
             setTimeout(() => {
-              if (error) resolve('Success');
-              else reject('Error!');
-            }, 3000);
-          })
-            .then(() => {
-              this.setState({
-                error: error
-              });
-            })
-            .catch(error => {
-              this.setState({
-                error: error
-              });
-            });
+              console.log(data);
+              resolve();
+            }, 100)
+          });
         }}
         fields={[
           {
             name: 'text',
             type: 'text',
             label: 'Name',
-            mask: '000',
-            validation: e => {
-              if (e !== '2') return 'Need 2';
-            },
+            mask: '+AAA',
             statusIcon: {
               enable: true
             }
-          },
-          {
-            label: 'Password',
-            type: 'password',
-            name: 'password',
-            validation: e => {
-              if (e !== '2') return 'Need 2';
-            },
-            switchButton: {
-              enable: true
-            }
-          },
-          {
-            type: 'textarea',
-            name: '1',
-            resetButton: {
-              enable: true
-            }
-          },
-          {
-            type: 'select',
-            name: 'select',
-            options: [
-              {
-                text: '221',
-                value: ''
-              },
-              {
-                text: '1',
-                value: '1'
-              },
-              {
-                text: '2',
-                value: '2 '
-              }
-            ]
           },
           {
             value: 'Sign in',
@@ -97,26 +48,6 @@ class App extends Component {
               },
               error: true
             }
-          },
-          {
-            type: 'radio',
-            name: '22',
-            inline: true,
-            options: [
-              {
-                value: '1',
-                text: '2'
-              },
-              {
-                value: '2',
-                text: '2'
-              }
-            ]
-          },
-          {
-            type: 'checkbox',
-            text: 'Remeber me',
-            name: 'remember_me'
           }
         ]}
       />
