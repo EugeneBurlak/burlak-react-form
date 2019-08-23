@@ -34,7 +34,7 @@ class App extends Component {
             name: 'text',
             type: 'text',
             label: 'Name',
-            mask: '+AAA',
+            mask: '+0(000)000-00-00',
             statusIcon: {
               enable: true
             }
