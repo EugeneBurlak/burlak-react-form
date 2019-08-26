@@ -24,16 +24,16 @@ export default class Form extends Component {
   getAllFields() {
     let { fields } = this.state,
       flatFields = [];
-    if(!fields) return false;
+    if (!fields) return false;
     let returnAllChilds = field => {
-        if (field.fields) {
-          field.fields.forEach((field, index) => {
-            returnAllChilds(field);
-          });
-        } else {
-          flatFields.push(field);
-        }
-      };
+      if (field.fields) {
+        field.fields.forEach((field, index) => {
+          returnAllChilds(field);
+        });
+      } else {
+        flatFields.push(field);
+      }
+    };
     fields.forEach((field, index) => {
       returnAllChilds(field);
     });
@@ -589,9 +589,9 @@ export default class Form extends Component {
         return item.name === name;
       }),
       validation =
-        ((index >= 0) && fields[index] && fields[index].validation) || false;
+        (index >= 0 && fields[index] && fields[index].validation) || false;
     if (!values[name]) return false;
-    if ((validation && validation(values[name], values)) || errors[name]){
+    if ((validation && validation(values[name], values)) || errors[name]) {
       return 'error';
     }
     if (values[name]) return 'success';
@@ -801,30 +801,8 @@ export default class Form extends Component {
   checkMaskChar(char, mask, index) {
     let result = '',
       maskChar = mask[index],
-      specChars = [
-        '+',
-        '-',
-        '(',
-        ')',
-        '[',
-        ']',
-        '{',
-        '}',
-        '.',
-        ',',
-        '\\',
-        '/',
-        ' ',
-        '',
-        '_',
-        '=',
-        '~',
-        '`',
-        '|',
-        "'",
-        '"'
-      ];
-    if (specChars.indexOf(maskChar) >= 0) {
+      specChars = '+-()[]{}.,\\/-=_~`|\'" ';
+    if (specChars.split('').indexOf(maskChar) >= 0) {
       result += maskChar;
       result += this.checkMaskChar(char, mask, ++index);
     }
@@ -845,10 +823,9 @@ export default class Form extends Component {
     for (let index in value) {
       index = parseInt(index);
       let char = value[index].toString();
-      if(char === mask[index]){
+      if (char === mask[index]) {
         newValue += char;
-      }
-      else{
+      } else {
         newValue += this.checkMaskChar(char, mask, index);
       }
     }
