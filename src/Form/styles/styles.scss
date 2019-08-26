@@ -298,6 +298,67 @@ $text: #232732;
   }
 }
 
+// status icon
+
+.form {
+  &-control-wrapper-inner {
+    &__with-status {
+      input,
+      textarea,
+      select {
+        padding-right: 40px;
+      }
+      position: relative;
+      overflow: hidden;
+      &:after,
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        margin-top: -9px;
+        width: 18px;
+        height: 18px;
+        background-size: 100% 100%;
+        right: 10px;
+        background-image: url(./images/error.svg);
+        transform: translateX(200%);
+        transition: 0.3s;
+      }
+    }
+    &:after {
+      background-image: url(./images/success.svg);
+    }
+    &__error {
+      &:before {
+        transform: translateX(0);
+      }
+    }
+    &__success {
+      &:after {
+        transform: translateX(0);
+      }
+    }
+    &__with-button {
+      &.form-control-wrapper-inner {
+        &__error {
+          &:before {
+            transform: translateX(-160%);
+          }
+        }
+        &__success {
+          &:after {
+            transform: translateX(-160%);
+          }
+        }
+      }
+      .form-control {
+        padding-right: 70px;
+      }
+    }
+  }
+}
+
 //switch
 
 .form {
@@ -341,7 +402,6 @@ $text: #232732;
   .form-field__half {
     width: 100%;
   }
-  
 }
 
 .form__light {
@@ -489,7 +549,7 @@ $text: #232732;
     &-field {
       &__fields {
         padding: 0;
-        & > .form-control-wrapper > .form-control-wrapper-inner{
+        & > .form-control-wrapper > .form-control-wrapper-inner {
           margin: 0 -10px;
         }
         .form-field {
@@ -504,7 +564,7 @@ $text: #232732;
   }
 }
 
-.form__modernDark {
+.form__dark {
   background-color: #2b2a49;
   color: $white;
   margin: 0;
@@ -701,66 +761,11 @@ $text: #232732;
       }
     }
     &-reset {
+      top: 30px;
       &:hover {
         background-color: #0cb566;
         svg {
           fill: #fff;
-        }
-      }
-    }
-    &-control-wrapper-inner {
-      &__with-status {
-        input,
-        textarea,
-        select {
-          padding-right: 40px;
-        }
-        position: relative;
-        overflow: hidden;
-        &:after,
-        &:before {
-          content: '';
-          display: block;
-          position: absolute;
-          top: 50%;
-          margin-top: -9px;
-          width: 18px;
-          height: 18px;
-          background-size: 100% 100%;
-          right: 10px;
-          background-image: url(./images/error.svg);
-          transform: translateX(200%);
-          transition: 0.3s;
-        }
-      }
-      &:after {
-        background-image: url(./images/success.svg);
-      }
-      &__error {
-        &:before {
-          transform: translateX(0);
-        }
-      }
-      &__success {
-        &:after {
-          transform: translateX(0);
-        }
-      }
-      &__with-button {
-        &.form-control-wrapper-inner {
-          &__error {
-            &:before {
-              transform: translateX(-160%);
-            }
-          }
-          &__success {
-            &:after {
-              transform: translateX(-160%);
-            }
-          }
-        }
-        .form-control {
-          padding-right: 70px;
         }
       }
     }

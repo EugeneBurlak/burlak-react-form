@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './styles/styles.scss';
-import { IMaskInput } from 'react-imask';
 let ref;
 
 export default class Form extends Component {
@@ -24,8 +23,9 @@ export default class Form extends Component {
 
   getAllFields() {
     let { fields } = this.state,
-      flatFields = [],
-      returnAllChilds = field => {
+      flatFields = [];
+    if(!fields) return false;
+    let returnAllChilds = field => {
         if (field.fields) {
           field.fields.forEach((field, index) => {
             returnAllChilds(field);
@@ -548,29 +548,6 @@ export default class Form extends Component {
     });
   }
 
-  buildMask(item) {
-    let { types, values } = this.state,
-      className = 'form-control';
-    if (item.type) className += ' form-control__' + item.type;
-    if (item.width) className += ' form-control__' + item.width;
-    if (item.className) className += ' ' + item.className;
-    return (
-      <IMaskInput
-        mask={item.mask}
-        value={values[item.name]}
-        className={className}
-        placeholder={item.placeholder}
-        onAccept={(value, mask) => {
-          this.inputChange(item, {
-            target: {
-              value: value
-            }
-          });
-        }}
-      />
-    );
-  }
-
   switcher(field) {
     switch (field.type) {
       case 'text':
@@ -601,8 +578,6 @@ export default class Form extends Component {
         return this.buildHtml(field);
       case 'fields':
         return this.fieldsBuilder(field.fields);
-      case 'mask':
-        return this.buildMask(field);
     }
   }
 
@@ -614,10 +589,11 @@ export default class Form extends Component {
         return item.name === name;
       }),
       validation =
-        (index && fields[index] && fields[index].validation) || false;
+        ((index >= 0) && fields[index] && fields[index].validation) || false;
     if (!values[name]) return false;
-    if ((validation && validation(values[name], values)) || errors[name])
+    if ((validation && validation(values[name], values)) || errors[name]){
       return 'error';
+    }
     if (values[name]) return 'success';
     return false;
   }
@@ -822,8 +798,9 @@ export default class Form extends Component {
     );
   }
 
-  checkMaskChar(char, valueChar, nextChar) {
+  checkMaskChar(char, mask, index) {
     let result = '',
+      maskChar = mask[index],
       specChars = [
         '+',
         '-',
@@ -838,6 +815,7 @@ export default class Form extends Component {
         '\\',
         '/',
         ' ',
+        '',
         '_',
         '=',
         '~',
@@ -846,19 +824,17 @@ export default class Form extends Component {
         "'",
         '"'
       ];
-    if (specChars.indexOf(char) >= 0) {
-      result += char;
-      if (nextChar) {
-        result += this.checkMaskChar(nextChar, valueChar);
-      }
+    if (specChars.indexOf(maskChar) >= 0) {
+      result += maskChar;
+      result += this.checkMaskChar(char, mask, ++index);
     }
-    if (char === '0') {
+    if (maskChar === '0') {
       let pattern = /^[0-9]+$/;
-      if (pattern.test(valueChar)) result += valueChar;
+      if (pattern.test(char)) result += char;
     }
-    if (char === 'A' && !parseInt(valueChar)) {
+    if (maskChar === 'A') {
       let pattern = /^[A-Za-zА-Яа-я]+$/;
-      if (pattern.test(valueChar)) result += valueChar;
+      if (pattern.test(char)) result += char;
     }
     return result;
   }
@@ -866,13 +842,15 @@ export default class Form extends Component {
   checkMask(value, mask) {
     let newValue = '';
     mask = mask.split('');
-    for (let index in mask) {
+    for (let index in value) {
       index = parseInt(index);
-      if (!value[index]) continue;
-      let char = mask[index].toString(),
-        nextChar = mask[index + 1] ? mask[index + 1].toString() : false,
-        valueChar = value[index];
-      newValue += this.checkMaskChar(char, valueChar, nextChar);
+      let char = value[index].toString();
+      if(char === mask[index]){
+        newValue += char;
+      }
+      else{
+        newValue += this.checkMaskChar(char, mask, index);
+      }
     }
     return newValue;
   }
