@@ -798,13 +798,13 @@ export default class Form extends Component {
     );
   }
 
-  checkMaskChar(char, mask, index) {
+  checkMaskChar(char, mask, index, maskInc) {
     let result = '',
       maskChar = mask[index],
       specChars = '+-()[]{}.,\\/-=_~`|\'" ';
     if (specChars.split('').indexOf(maskChar) >= 0) {
       result += maskChar;
-      result += this.checkMaskChar(char, mask, ++index);
+      result += this.checkMaskChar(char, mask, ++index, maskInc);
     }
     if (maskChar === '0') {
       let pattern = /^[0-9]+$/;
@@ -814,19 +814,24 @@ export default class Form extends Component {
       let pattern = /^[A-Za-zА-Яа-я]+$/;
       if (pattern.test(char)) result += char;
     }
+    if (result.length) maskInc();
     return result;
   }
 
   checkMask(value, mask) {
-    let newValue = '';
+    let newValue = '',
+      maskIndex = 0;
     mask = mask.split('');
     for (let index in value) {
       index = parseInt(index);
       let char = value[index].toString();
       if (char === mask[index]) {
         newValue += char;
+        ++maskIndex;
       } else {
-        newValue += this.checkMaskChar(char, mask, index);
+        newValue += this.checkMaskChar(char, mask, maskIndex, () => {
+          ++maskIndex;
+        });
       }
     }
     return newValue;
