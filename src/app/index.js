@@ -12,7 +12,7 @@ class App extends Component {
     let { error } = this.state;
     return (
       <Form
-        theme="light"
+        theme="dark"
         autoReset={true}
         ref="form"
         title={{
@@ -26,7 +26,7 @@ class App extends Component {
             setTimeout(() => {
               console.log(data);
               resolve();
-            }, 100)
+            }, 1000)
           });
         }}
         fields={[
