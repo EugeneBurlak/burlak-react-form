@@ -857,7 +857,7 @@ export default class Form extends Component {
       maskIndex = 0;
     mask = this.createMaskArray(mask);
     for (let index in value) {
-      if(!mask[index]) return newValue;
+      if (!mask[index]) return newValue;
       index = parseInt(index);
       let char = value[index].toString();
       if (char === mask[index].value) {
