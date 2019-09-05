@@ -247,7 +247,9 @@ export default class Form extends Component {
       result = field.options[0].value;
     }
     return field.hasOwnProperty('value') && field.value !== null
-      ? field.value
+      ? field.mask
+        ? this.checkMask(field.value, field.mask)
+        : field.value
       : result;
   }
 

@@ -34,7 +34,8 @@ class App extends Component {
             name: 'text',
             type: 'text',
             label: 'Phone',
-            mask:'+{7}(000) 000-00-00',
+            value: '199999',
+            mask:'0000',
             // mixinValue: value => {
             //   let int = parseInt(value);
             //   if (int > new Date().getFullYear()) return new Date().getFullYear()+'';
