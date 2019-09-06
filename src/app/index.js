@@ -33,7 +33,9 @@ class App extends Component {
           {
             type: 'date',
             name: 'date',
-            value: +new Date() - 111186000,
+            min: +new Date() - 86400 * 1000 * 4,
+            value: +new Date() - 86400 * 1000,
+            max: +new Date()
           },
           {
             value: 'Sign in',

@@ -315,8 +315,8 @@ export default class Form extends Component {
           placeholder={item.placeholder}
           disabled={item.disabled}
           inputMode={item.inputmode || ''}
-          min={item.min}
-          max={item.max}
+          min={this.formatDate(item.min)}
+          max={this.formatDate(item.max)}
           onChange={event => {
             this.dateChange(item, event);
           }}
@@ -964,7 +964,7 @@ export default class Form extends Component {
     return (
       <div className="form-title">
         {title.htmlBefore && (
-          <div className="form-title-html form-title-html__before">
+          <div className="form  -title-html form-title-html__before">
             {this.buildHtml(title.htmlBefore)}
           </div>
         )}
