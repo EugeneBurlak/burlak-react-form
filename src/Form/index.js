@@ -301,6 +301,64 @@ export default class Form extends Component {
     );
   }
 
+  buildDate(item) {
+    let { types, values } = this.state,
+      className = 'form-control';
+    if (item.type) className += ' form-control__' + item.type;
+    if (item.width) className += ' form-control__' + item.width;
+    if (item.className) className += ' ' + item.className;
+    return (
+      <React.Fragment>
+        <input
+          id={item.name + '__' + this.state.hash}
+          className={className}
+          placeholder={item.placeholder}
+          disabled={item.disabled}
+          inputMode={item.inputmode || ''}
+          min={item.min}
+          max={item.max}
+          onChange={event => {
+            this.dateChange(item, event);
+          }}
+          type={types[item.name]}
+          value={values[item.name] ? this.formatDate(values[item.name]) : ''}
+        />
+      </React.Fragment>
+    );
+  }
+
+  dateChange(item, event) {
+    let { values } = this.state,
+      { value } = event.target;
+    value = +new Date(value);
+    if (item.beforeChange && !item.beforeChange(value))
+      value = values[item.name];
+    if (item.mixinValue) value = item.mixinValue(value);
+    values[item.name] = value;
+    item.onChange && item.onChange(values[item.name], item);
+    this.removeError(item);
+    this.setState({
+      values
+    });
+  }
+
+  formatDate(time) {
+    let formated = '',
+      date = new Date(time),
+      year = date.getFullYear(),
+      month = 1 + date.getMonth(),
+      day = date.getDate();
+    formated =
+      year +
+      '-' +
+      (month < 10 ? '0' : '') +
+      month +
+      '-' +
+      (day < 10 ? '0' : '') +
+      day;
+    return formated;
+  }
+
   switchField(name, to) {
     let { types } = this.state;
     types[name] = to;
@@ -565,7 +623,7 @@ export default class Form extends Component {
       case 'tel':
         return this.buildInput(field);
       case 'date':
-        return this.buildInput(field);
+        return this.buildDate(field);
       case 'textarea':
         return this.buildTextarea(field);
       case 'select':
