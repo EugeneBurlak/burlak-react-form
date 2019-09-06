@@ -66,6 +66,16 @@ $text: #232732;
         outline: none;
       }
     }
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url(../styles/images/arrow-down-green.svg);
+      background-position: center center;
+      background-position-x: calc(100% - 10px);
+      background-repeat: no-repeat;
+      background-size: 16px 16px;
+    }
     select[multiple] {
       height: auto;
     }
@@ -169,7 +179,6 @@ $text: #232732;
           &-pointer {
             &:after {
               transform: translate(-50%, -60%) rotate(45deg);
-              // display: none;
             }
           }
         }
@@ -294,67 +303,6 @@ $text: #232732;
     }
     &:active {
       transform: rotate(90deg) scale(0.8);
-    }
-  }
-}
-
-// status icon
-
-.form {
-  &-control-wrapper-inner {
-    &__with-status {
-      input,
-      textarea,
-      select {
-        padding-right: 40px;
-      }
-      position: relative;
-      overflow: hidden;
-      &:after,
-      &:before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 50%;
-        margin-top: -9px;
-        width: 18px;
-        height: 18px;
-        background-size: 100% 100%;
-        right: 10px;
-        background-image: url(./images/error.svg);
-        transform: translateX(200%);
-        transition: 0.3s;
-      }
-    }
-    &:after {
-      background-image: url(./images/success.svg);
-    }
-    &__error {
-      &:before {
-        transform: translateX(0);
-      }
-    }
-    &__success {
-      &:after {
-        transform: translateX(0);
-      }
-    }
-    &__with-button {
-      &.form-control-wrapper-inner {
-        &__error {
-          &:before {
-            transform: translateX(-160%);
-          }
-        }
-        &__success {
-          &:after {
-            transform: translateX(-160%);
-          }
-        }
-      }
-      .form-control {
-        padding-right: 70px;
-      }
     }
   }
 }
@@ -680,17 +628,6 @@ $text: #232732;
       textarea {
         height: 100px;
       }
-      select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        height: 61px;
-        background-image: url(../styles/images/arrow-down-green.svg);
-        background-position: center center;
-        background-position-x: calc(100% - 10px);
-        background-repeat: no-repeat;
-        background-size: 16px 16px;
-      }
       &__submit {
         button {
           border-radius: 5px;
@@ -781,35 +718,6 @@ $text: #232732;
         }
       }
     }
-    &-field {
-      &__select {
-        .form-control-wrapper-inner {
-          &__with-status {
-            select {
-              padding-right: 70px;
-            }
-            &.form-control-wrapper-inner {
-              &__error {
-                &:before {
-                  transform: translateX(-160%);
-                }
-              }
-              &__success {
-                &:after {
-                  transform: translateX(-160%);
-                }
-              }
-            }
-          }
-        }
-      }
-      &__radio,
-      &__checkbox {
-        .form-control-wrapper-inner__with-status {
-          padding-right: 40px;
-        }
-      }
-    }
   }
 }
 
@@ -824,5 +732,108 @@ $text: #232732;
     -webkit-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
     transform: rotate(360deg);
+  }
+}
+
+// status icon
+
+.form {
+  & &-control-wrapper-inner {
+    &__with-status {
+      position: relative;
+      overflow: hidden;
+      &:after,
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        margin-top: -9px;
+        width: 18px;
+        height: 18px;
+        background-size: 100% 100%;
+        right: 10px;
+        background-image: url(./images/error.svg);
+        transform: translateX(200%);
+        transition: 0.3s;
+      }
+    }
+    &:after {
+      background-image: url(./images/success.svg);
+    }
+    &__error,
+    &__success {
+      &.form-control-wrapper-inner__with-status {
+        input,
+        textarea {
+          padding-right: 40px;
+        }
+        select {
+          padding-right: 70px;
+        }
+        .form-list {
+          padding-right: 40px;
+        }
+      }
+    }
+    &__error {
+      &:before {
+        transform: translateX(0);
+      }
+    }
+    &__success {
+      &:after {
+        transform: translateX(0);
+      }
+    }
+    &__with-button {
+      &.form-control-wrapper-inner {
+        &__error {
+          &:before {
+            transform: translateX(-160%);
+          }
+        }
+        &__success {
+          &:after {
+            transform: translateX(-160%);
+          }
+        }
+      }
+      .form-control {
+        padding-right: 70px;
+      }
+    }
+  }
+  &-field {
+    &__select {
+      & .form-control-wrapper-inner {
+        select {
+          padding-right: 40px;
+          appearance: none;
+        }
+        &__error {
+          &:before {
+            transform: translateX(-160%);
+          }
+        }
+        &__success {
+          &:after {
+            transform: translateX(-160%);
+          }
+        }
+      }
+    }
+  }
+  &__light {
+    .form-control-wrapper-inner__with-status {
+      &.form-control-wrapper-inner__error {
+        input,
+        textarea,
+        select,
+        .form-switcher-pointer {
+          border-color: $error;
+        }
+      }
+    }
   }
 }

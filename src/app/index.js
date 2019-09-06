@@ -15,6 +15,11 @@ class App extends Component {
         theme="dark"
         autoReset={true}
         ref="form"
+        statusIcon={{
+          enable: true,
+          success: true,
+          error: true
+        }}
         title={{
           text: 'Login',
           htmlAfter: (() => {
@@ -36,13 +41,42 @@ class App extends Component {
             label: 'Phone',
             value: '199999',
             mask:'0000',
-            // mixinValue: value => {
-            //   let int = parseInt(value);
-            //   if (int > new Date().getFullYear()) return new Date().getFullYear()+'';
-            //   return value;
-            // },
-            statusIcon: {
+            validation: (e) => {
+              if(!e) return 'sss'
+            }
+          },
+          {
+            type: 'radio',
+            name: 'checkbox11',
+            inline: true,
+            options: [{
+              value: '1',
+              text: '1'
+            },{
+              value: '2',
+              text: '2'
+            }],
+            validation: (e) => {
+              if(!e) return 'sss'
+            }
+          },{
+            type: 'select',
+            name: 'select',
+            options: [{
+              value: '',
+              text: '1'
+            },{
+              value: '1',
+              text: '1 dsa dsa dsa dsds dsa dsa dsa ds ddsds dsa dsa dsa ds ddsds dsa dsa dsa ds das dsa '
+            },{
+              value: '2',
+              text: '2'
+            }],
+            resetButton:{
               enable: true
+            },
+            validation: (e) => {
+              if(!e) return 'sss'
             }
           },
           {

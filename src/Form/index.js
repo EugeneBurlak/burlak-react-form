@@ -11,6 +11,7 @@ export default class Form extends Component {
       className: props.className,
       title: props.title,
       hash: this.generateHash(),
+      statusIcon: props.statusIcon || false,
       values: {},
       types: {},
       errors: {},
@@ -45,7 +46,8 @@ export default class Form extends Component {
       fields: props.fields,
       cols: props.cols,
       className: props.className,
-      title: props.title
+      title: props.title,
+      statusIcon: props.statusIcon
     });
   }
 
@@ -584,31 +586,60 @@ export default class Form extends Component {
   }
 
   getFieldStatus(item) {
-    let { errors, values } = this.state,
+    let { statusIcon, errors, values } = this.state,
       { name } = item,
       fields = this.getAllFields(),
       index = fields.findIndex((item, index) => {
         return item.name === name;
       }),
+      field = fields[index],
+      fieldStatusIcon = field.statusIcon || statusIcon,
       validation =
-        (index >= 0 && fields[index] && fields[index].validation) || false;
-    if (!values[name]) return false;
-    if ((validation && validation(values[name], values)) || errors[name]) {
-      return 'error';
+        (index >= 0 && fields[index] && fields[index].validation) || false,
+      isError = true,
+      isSuccess = true;
+    if (
+      fieldStatusIcon &&
+      fieldStatusIcon.enable &&
+      fieldStatusIcon.hasOwnProperty('error')
+    ) {
+      isError = fieldStatusIcon.error;
     }
-    if (values[name]) return 'success';
+    if (
+      fieldStatusIcon &&
+      fieldStatusIcon.enable &&
+      fieldStatusIcon.hasOwnProperty('success')
+    ) {
+      isSuccess = fieldStatusIcon.success;
+    }
+    if (!values.hasOwnProperty(name)) return false;
+    if (
+      isError &&
+      ((validation && validation(values[name], values)) || errors[name])
+    ) {
+      return 'error';
+    } else if (
+      isSuccess &&
+      !(validation && validation(values[name], values)) &&
+      values[name]
+    )
+      return 'success';
     return false;
   }
 
   buildControl(item) {
-    let className = 'form-control-wrapper',
+    let { statusIcon } = this.state,
+      className = 'form-control-wrapper',
       classNameInner = 'form-control-wrapper-inner',
       resetButton = item && item.resetButton ? item.resetButton : false,
       fieldStatus = this.getFieldStatus(item);
     if (resetButton && resetButton.enable)
       className += ' form-control-wrapper__with-reset';
     if (item.disabled) className += ' form-control-wrapper__disabled';
-    if (item.statusIcon && item.statusIcon.enable)
+    if (
+      (statusIcon && statusIcon.enable) ||
+      (item.statusIcon && item.statusIcon.enable)
+    )
       classNameInner += ' form-control-wrapper-inner__with-status';
     if (fieldStatus) {
       className += ' form-control-wrapper__' + fieldStatus;
@@ -628,16 +659,12 @@ export default class Form extends Component {
   buildHtml(data) {
     if (!data) return null;
     let html = data;
-
     if (data instanceof Function) {
       html = data(this);
     }
     if (data.html) {
       if (data.html instanceof Function) html = data.html(this);
       else html = data.html;
-    }
-    if (data instanceof Object && !(data instanceof Function) && !data.html) {
-      html = null;
     }
     let className = 'form-html';
     if (data.inline) className += ' form-html__inline';
