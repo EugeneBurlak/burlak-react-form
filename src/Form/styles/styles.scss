@@ -624,6 +624,16 @@ $text: #232732;
         width: 100%;
         display: block;
         height: auto;
+        &::placeholder {
+          color: $white;
+          opacity: 1;
+        }
+        &:-ms-input-placeholder {
+          color: $white;
+        }
+        &::-ms-input-placeholder {
+          color: $white;
+        }
       }
       textarea {
         height: 100px;

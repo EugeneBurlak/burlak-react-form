@@ -117,8 +117,30 @@ export default class Form extends Component {
     });
   }
 
+  checkError(item) {
+    let { errors, values } = this.state,
+      error = item.validation(values[item.name], values);
+    if (error) {
+      errors[item.name] = error;
+    } else {
+      delete errors[item.name];
+    }
+    this.setState({
+      errors
+    });
+  }
+
+  inputBlur(item, event) {
+    item.onBlur && item.onBlur(values[item.name], item);
+    if (item.validationOnBlur) this.checkError(item);
+  }
+
+  inputFocus(item, event) {
+    item.onFocus && item.onFocus(values[item.name], item);
+  }
+
   inputChange(item, event) {
-    let { values } = this.state,
+    let { values, errors } = this.state,
       { value } = event.target;
     if (item.beforeChange && !item.beforeChange(value))
       value = values[item.name];
@@ -126,7 +148,30 @@ export default class Form extends Component {
     if (item.mask) value = this.checkMask(value, item.mask);
     values[item.name] = value;
     item.onChange && item.onChange(values[item.name], item);
-    this.removeError(item);
+    this.setState(
+      {
+        values
+      },
+      () => {
+        !item.validationOnChange
+          ? this.removeError(item)
+          : this.checkError(item);
+      }
+    );
+  }
+
+  setValue(name, value) {
+    let { values } = this.state,
+      fields = this.getAllFields(),
+      index = false,
+      field = false;
+    index = fields.findIndex((item, index) => {
+      return item.name === name;
+    });
+    field = index >= 0 ? fields[index] : false;
+    if (field && field.mixinValue) value = field.mixinValue(value);
+    if (field && field.mask) value = this.checkMask(value, field.mask);
+    values[name] = value;
     this.setState({
       values
     });
@@ -293,6 +338,12 @@ export default class Form extends Component {
           onChange={event => {
             this.inputChange(item, event);
           }}
+          onFocus={event => {
+            this.inputFocus(item, event);
+          }}
+          onBlur={event => {
+            this.inputBlur(item, event);
+          }}
           type={types[item.name]}
           value={values[item.name] || ''}
         />
@@ -414,6 +465,12 @@ export default class Form extends Component {
         disabled={item.disabled}
         onChange={event => {
           this.inputChange(item, event);
+        }}
+        onFocus={event => {
+          this.inputFocus(item, event);
+        }}
+        onBlur={event => {
+          this.inputBlur(item, event);
         }}
         value={this.state.values[item.name]}
       />
@@ -649,9 +706,9 @@ export default class Form extends Component {
       fields = this.getAllFields(),
       index = fields.findIndex((item, index) => {
         return item.name === name;
-      }),
-      field = fields[index],
-      fieldStatusIcon = field.statusIcon || statusIcon,
+      });
+    let field = index >= 0 ? fields[index] : false,
+      fieldStatusIcon = (field && field.statusIcon) || statusIcon,
       validation =
         (index >= 0 && fields[index] && fields[index].validation) || false,
       isError = true,
@@ -921,18 +978,21 @@ export default class Form extends Component {
   checkMaskChar(char, mask, index, maskInc) {
     let result = '',
       maskChar = mask[index];
-    if (maskChar.type === 'plain') {
-      result += maskChar.value;
-      result += this.checkMaskChar(char, mask, ++index, maskInc);
-    }
-    if (maskChar.type === 'dynamic') {
-      if (maskChar.value === '0') {
-        let pattern = /^[0-9]+$/;
-        if (pattern.test(char)) result += char;
+    if (!maskChar) result += '';
+    else {
+      if (maskChar.type === 'plain') {
+        result += maskChar.value;
+        result += this.checkMaskChar(char, mask, ++index, maskInc);
       }
-      if (maskChar.value === 'A') {
-        let pattern = /^[A-Za-zА-Яа-я]+$/;
-        if (pattern.test(char)) result += char;
+      if (maskChar.type === 'dynamic') {
+        if (maskChar.value === '0') {
+          let pattern = /^[0-9]+$/;
+          if (pattern.test(char)) result += char;
+        }
+        if (maskChar.value === 'A') {
+          let pattern = /^[A-Za-zА-Яа-я]+$/;
+          if (pattern.test(char)) result += char;
+        }
       }
     }
     if (result.length) maskInc();

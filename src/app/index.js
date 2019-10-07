@@ -12,43 +12,35 @@ class App extends Component {
     let { error } = this.state;
     return (
       <Form
-        theme="dark"
-        autoReset={true}
-        ref="form"
-        title={{
-          text: 'Login',
-          htmlAfter: (() => {
-            return <div>2</div>;
-          })()
-        }}
-        onSubmit={(data, scope) => {
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              console.log(data);
-              resolve();
-            }, 1000)
-          });
-        }}
-        fields={[
-          {
-            type: 'date',
-            name: 'date',
-            min: +new Date() - 86400 * 1000 * 4,
-            value: +new Date() - 86400 * 1000,
-            max: +new Date()
-          },
-          {
-            value: 'Sign in',
-            type: 'submit',
-            htmlAfter: {
-              html: () => {
-                return error ? error : null;
-              },
-              error: true
-            }
-          }
-        ]}
-      />
+            statusIcon={{ enable: false }}
+            theme={'dark'}
+            ref="form"
+            fields={[
+              {
+                type: 'fields',
+                fields: [
+                  {
+                    name: 'first_name',
+                    type: 'text',
+                    mask: '+0020',
+                    value: '+3323',
+                    validationOnBlur: true,
+                    placeholder: 'First name',
+                    width: 'half',
+                    validation: (e) => {
+                      return 'dsds'
+                    }
+                  },
+                  {
+                    name: 'last_name',
+                    type: 'text',
+                    placeholder: 'LAST_NAME',
+                    width: 'half'
+                  }
+                ]
+              }
+            ]}
+          />
     );
   }
 }
