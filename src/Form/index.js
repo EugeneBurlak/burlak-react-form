@@ -327,6 +327,7 @@ export default class Form extends Component {
     if (item.type) className += ' form-control__' + item.type;
     if (item.width) className += ' form-control__' + item.width;
     if (item.className) className += ' ' + item.className;
+    console.log(item.additionalAttributes);
     return (
       <React.Fragment>
         <input
@@ -346,6 +347,7 @@ export default class Form extends Component {
           }}
           type={types[item.name]}
           value={values[item.name] || ''}
+          {...item.additionalAttributes}
         />
         {this.buildPasswordSwitch(item)}
       </React.Fragment>
