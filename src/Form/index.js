@@ -41,14 +41,14 @@ export default class Form extends Component {
     return flatFields;
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({
+  static getDerivedStateFromProps(props, state) {
+    return {
       fields: props.fields,
       cols: props.cols,
       className: props.className,
       title: props.title,
       statusIcon: props.statusIcon
-    });
+    };
   }
 
   componentWillMount() {
@@ -132,11 +132,13 @@ export default class Form extends Component {
 
   inputBlur(item, event) {
     item.onBlur && item.onBlur(values[item.name], item);
+    event.target.closest('.form-field').classList.remove('form-field__focused');
     if (item.validationOnBlur) this.checkError(item);
   }
 
   inputFocus(item, event) {
     item.onFocus && item.onFocus(values[item.name], item);
+    event.target.closest('.form-field').classList.add('form-field__focused');
   }
 
   inputChange(item, event) {
@@ -327,7 +329,6 @@ export default class Form extends Component {
     if (item.type) className += ' form-control__' + item.type;
     if (item.width) className += ' form-control__' + item.width;
     if (item.className) className += ' ' + item.className;
-    console.log(item.additionalAttributes);
     return (
       <React.Fragment>
         <input
@@ -372,6 +373,12 @@ export default class Form extends Component {
           max={this.formatDate(item.max)}
           onChange={event => {
             this.dateChange(item, event);
+          }}
+          onFocus={event => {
+            this.inputFocus(item, event);
+          }}
+          onBlur={event => {
+            this.inputBlur(item, event);
           }}
           type={types[item.name]}
           value={values[item.name] ? this.formatDate(values[item.name]) : ''}
@@ -444,6 +451,12 @@ export default class Form extends Component {
             placeholder={item.placeholder}
             disabled={item.disabled}
             multiple={item.multiple || false}
+            onFocus={event => {
+              this.inputFocus(item, event);
+            }}
+            onBlur={event => {
+              this.inputBlur(item, event);
+            }}
             onChange={event => {
               this.fileChange(item, event);
             }}
@@ -487,30 +500,48 @@ export default class Form extends Component {
     if (item.width) className += ' form-control__' + item.width;
     if (item.className) className += ' ' + item.className;
     return (
-      <select
-        id={item.name + '__' + this.state.hash}
-        className={className}
-        multiple={multiple}
-        disabled={item.disabled}
-        size={multiple ? item.size || 0 : 1}
-        value={values[item.name]}
-        onChange={event => {
-          this.selectChange(item, event);
-        }}
-      >
-        {item.options &&
-          item.options.map((option, index) => {
-            return (
-              <option
-                key={index}
-                disabled={option.disabled}
-                value={option.value}
-              >
-                {option.text}
-              </option>
-            );
-          })}
-      </select>
+      <React.Fragment>
+        <div className="form-control__select-arrow">
+          <svg viewBox="0 0 100 100" enable-background="new 0 0 100 100">
+            <polyline
+              points="10 35 50 74 90 35"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <select
+          id={item.name + '__' + this.state.hash}
+          className={className}
+          multiple={multiple}
+          disabled={item.disabled}
+          size={multiple ? item.size || 0 : 1}
+          value={values[item.name]}
+          onFocus={event => {
+            this.inputFocus(item, event);
+          }}
+          onBlur={event => {
+            this.inputBlur(item, event);
+          }}
+          onChange={event => {
+            this.selectChange(item, event);
+          }}
+        >
+          {item.options &&
+            item.options.map((option, index) => {
+              return (
+                <option
+                  key={index}
+                  disabled={option.disabled}
+                  value={option.value}
+                >
+                  {option.text}
+                </option>
+              );
+            })}
+        </select>
+      </React.Fragment>
     );
   }
 
