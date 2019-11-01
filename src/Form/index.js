@@ -15,11 +15,30 @@ export default class Form extends Component {
       values: {},
       types: {},
       errors: {},
+      changed: {},
       loading: false
     };
     this.submit = this.submit.bind(this);
     this.switcher = this.switcher.bind(this);
     this.hash = this.generateHash();
+    this.prepareData();
+  }
+
+  prepareData() {
+    let { values, types, errors } = this.state,
+      fields = this.getAllFields();
+    fields &&
+      fields.map((item, index) => {
+        if (item.name) {
+          values[item.name] = this.getDefaultValue(item);
+          types[item.name] = item.type;
+        }
+      });
+    this.setState({
+      values,
+      types,
+      errors
+    });
   }
 
   getAllFields() {
@@ -49,23 +68,6 @@ export default class Form extends Component {
       title: props.title,
       statusIcon: props.statusIcon
     };
-  }
-
-  componentWillMount() {
-    let { values, types, errors } = this.state,
-      fields = this.getAllFields();
-    fields &&
-      fields.map((item, index) => {
-        if (item.name) {
-          values[item.name] = this.getDefaultValue(item);
-          types[item.name] = item.type;
-        }
-      });
-    this.setState({
-      values,
-      types,
-      errors
-    });
   }
 
   onDragListener(e) {
@@ -128,6 +130,12 @@ export default class Form extends Component {
     this.setState({
       errors
     });
+  }
+
+  fieldChange(item, event) {
+    let { changed } = this.state;
+    changed[item.name] = +new Date();
+    this.setState(changed);
   }
 
   inputBlur(item, event) {
@@ -338,6 +346,7 @@ export default class Form extends Component {
           disabled={item.disabled}
           inputMode={item.inputmode || ''}
           onChange={event => {
+            this.fieldChange(item, event);
             this.inputChange(item, event);
           }}
           onFocus={event => {
@@ -372,6 +381,7 @@ export default class Form extends Component {
           min={this.formatDate(item.min)}
           max={this.formatDate(item.max)}
           onChange={event => {
+            this.fieldChange(item, event);
             this.dateChange(item, event);
           }}
           onFocus={event => {
@@ -458,6 +468,7 @@ export default class Form extends Component {
               this.inputBlur(item, event);
             }}
             onChange={event => {
+              this.fieldChange(item, event);
               this.fileChange(item, event);
             }}
             type={item.type}
@@ -479,6 +490,7 @@ export default class Form extends Component {
         placeholder={item.placeholder}
         disabled={item.disabled}
         onChange={event => {
+          this.fieldChange(item, event);
           this.inputChange(item, event);
         }}
         onFocus={event => {
@@ -502,12 +514,12 @@ export default class Form extends Component {
     return (
       <React.Fragment>
         <div className="form-control__select-arrow">
-          <svg viewBox="0 0 100 100" enable-background="new 0 0 100 100">
+          <svg viewBox="0 0 100 100" enableBackground="new 0 0 100 100">
             <polyline
               points="10 35 50 74 90 35"
               fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -525,6 +537,7 @@ export default class Form extends Component {
             this.inputBlur(item, event);
           }}
           onChange={event => {
+            this.fieldChange(item, event);
             this.selectChange(item, event);
           }}
         >
@@ -573,6 +586,7 @@ export default class Form extends Component {
                     type={item.type}
                     disabled={item.disabled || switcher.disabled}
                     onChange={event => {
+                      this.fieldChange(item, event);
                       if (item.type === 'checkbox') {
                         this.checkboxChange(item, switcher, event);
                       }
@@ -601,6 +615,7 @@ export default class Form extends Component {
                     type={item.type}
                     disabled={item.disabled}
                     onChange={event => {
+                      this.fieldChange(item, event);
                       this.boolChange(item, event);
                     }}
                     value={item.value}
@@ -734,7 +749,7 @@ export default class Form extends Component {
   }
 
   getFieldStatus(item) {
-    let { statusIcon, errors, values } = this.state,
+    let { statusIcon, errors, values, changed } = this.state,
       { name } = item,
       fields = this.getAllFields(),
       index = fields.findIndex((item, index) => {
@@ -760,7 +775,8 @@ export default class Form extends Component {
     ) {
       isSuccess = fieldStatusIcon.success;
     }
-    if (!values.hasOwnProperty(name)) return false;
+    if (!values.hasOwnProperty(name) || !changed.hasOwnProperty(name))
+      return false;
     if (
       isError &&
       ((validation && validation(values[name], values)) || errors[name])
