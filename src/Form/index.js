@@ -21,7 +21,6 @@ export default class Form extends Component {
     this.submit = this.submit.bind(this);
     this.switcher = this.switcher.bind(this);
     this.hash = this.generateHash();
-    this.prepareData();
   }
 
   prepareData() {
@@ -81,6 +80,7 @@ export default class Form extends Component {
   }
 
   componentDidMount() {
+    this.prepareData();
     let files = ref ? ref.querySelectorAll('input[type="file"]') : [];
     files.forEach((file, index) => {
       file.addEventListener('dragenter', this.onDragListener);
