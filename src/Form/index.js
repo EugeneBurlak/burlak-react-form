@@ -121,7 +121,7 @@ export default class Form extends Component {
 
   checkError(item) {
     let { errors, values } = this.state,
-      error = item.validation(values[item.name], values);
+      error = item.validation && item.validation(values[item.name], values);
     if (error) {
       errors[item.name] = error;
     } else {
@@ -141,7 +141,14 @@ export default class Form extends Component {
   inputBlur(item, event) {
     item.onBlur && item.onBlur(values[item.name], item);
     event.target.closest('.form-field').classList.remove('form-field__focused');
-    if (item.validationOnBlur) this.checkError(item);
+    if (item.mask && item.maskClearNotFilled) {
+      let { values } = this.state;
+      if (values[item.name].length !== item.mask.length)
+        values[item.name] = this.getDefaultValue(item);
+      this.setState({ values }, () => {
+        if (item.validationOnBlur) this.checkError(item);
+      });
+    } else if (item.validationOnBlur) this.checkError(item);
   }
 
   inputFocus(item, event) {
@@ -449,7 +456,7 @@ export default class Form extends Component {
       <div className={fileWrapperClassName}>
         <label>
           <div className="form-file-text">
-            {values.length
+            {values && values.length
               ? values.map((file, index) => {
                   return <span key={index}>{file.name}</span>;
                 })
