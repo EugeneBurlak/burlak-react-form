@@ -399,6 +399,7 @@ export default class Form extends Component {
           }}
           type={types[item.name]}
           value={values[item.name] ? this.formatDate(values[item.name]) : ''}
+          {...item.additionalAttributes}
         />
       </React.Fragment>
     );
@@ -479,6 +480,7 @@ export default class Form extends Component {
               this.fileChange(item, event);
             }}
             type={item.type}
+            {...item.additionalAttributes}
           />
         </label>
       </div>
@@ -507,6 +509,7 @@ export default class Form extends Component {
           this.inputBlur(item, event);
         }}
         value={this.state.values[item.name]}
+        {...item.additionalAttributes}
       />
     );
   }
@@ -547,6 +550,7 @@ export default class Form extends Component {
             this.fieldChange(item, event);
             this.selectChange(item, event);
           }}
+          {...item.additionalAttributes}
         >
           {item.options &&
             item.options.map((option, index) => {
@@ -555,6 +559,7 @@ export default class Form extends Component {
                   key={index}
                   disabled={option.disabled}
                   value={option.value}
+                  {...option.additionalAttributes}
                 >
                   {option.text}
                 </option>
@@ -602,6 +607,8 @@ export default class Form extends Component {
                     }}
                     value={switcher.value}
                     checked={checked}
+                    {...item.additionalAttributes}
+                    {...switcher.additionalAttributes}
                   />
                   <div className={switcherClassName}>
                     <div className="form-switcher-pointer" />
@@ -627,6 +634,7 @@ export default class Form extends Component {
                     }}
                     value={item.value}
                     checked={checked}
+                    {...item.additionalAttributes}
                   />
                   <div className={switcherClassName}>
                     <div className="form-switcher-pointer" />
@@ -647,6 +655,7 @@ export default class Form extends Component {
         className={item.className}
         disabled={loading || item.disabled}
         hidden={item.hidden}
+        {...item.additionalAttributes}
       >
         {this.state.values[item.name] || item.value}
         <i
