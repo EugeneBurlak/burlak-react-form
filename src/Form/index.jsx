@@ -16,7 +16,7 @@ export default class Form extends Component {
       types: {},
       errors: {},
       changed: {},
-      loading: false
+      loading: false,
     };
     this.submit = this.submit.bind(this);
     this.switcher = this.switcher.bind(this);
@@ -36,7 +36,7 @@ export default class Form extends Component {
     this.setState({
       values,
       types,
-      errors
+      errors,
     });
   }
 
@@ -44,7 +44,7 @@ export default class Form extends Component {
     let { fields } = this.state,
       flatFields = [];
     if (!fields) return false;
-    let returnAllChilds = field => {
+    let returnAllChilds = (field) => {
       if (field.fields) {
         field.fields.forEach((field, index) => {
           returnAllChilds(field);
@@ -65,7 +65,7 @@ export default class Form extends Component {
       cols: props.cols,
       className: props.className,
       title: props.title,
-      statusIcon: props.statusIcon
+      statusIcon: props.statusIcon,
     };
   }
 
@@ -104,10 +104,7 @@ export default class Form extends Component {
     let rand = window.Math.floor(window.Math.random() * 0x10000000000000),
       result;
     (rand = rand.toString(16).substring(1)),
-      (result = rand
-        .split('')
-        .splice(0, 10)
-        .join(''));
+      (result = rand.split('').splice(0, 10).join(''));
     return result;
   }
 
@@ -115,7 +112,7 @@ export default class Form extends Component {
     let { errors } = this.state;
     delete errors[item.name];
     this.setState({
-      errors
+      errors,
     });
   }
 
@@ -128,7 +125,7 @@ export default class Form extends Component {
       delete errors[item.name];
     }
     this.setState({
-      errors
+      errors,
     });
   }
 
@@ -167,7 +164,7 @@ export default class Form extends Component {
     item.onChange && item.onChange(values[item.name], item);
     this.setState(
       {
-        values
+        values,
       },
       () => {
         !item.validationOnChange
@@ -190,7 +187,7 @@ export default class Form extends Component {
     if (field && field.mask) value = this.checkMask(value, field.mask);
     values[name] = value;
     this.setState({
-      values
+      values,
     });
   }
 
@@ -205,13 +202,13 @@ export default class Form extends Component {
         let file = files[i - 1];
         let reader = new FileReader();
         reader.readAsBinaryString(file);
-        reader.onload = function() {
+        reader.onload = function () {
           let base64 = btoa(reader.result);
           filesObject.push({
             name: file.name,
             data: 'data:' + file.type + ';base64,' + base64,
             type: file.type,
-            size: file.size
+            size: file.size,
           });
           if (i === files.length) {
             setTimeout(() => {
@@ -220,13 +217,13 @@ export default class Form extends Component {
           }
         };
       }
-    }).then(resp => {
+    }).then((resp) => {
       if (item.beforeChange && !item.beforeChange(resp)) return false;
       values[item.name] = resp;
       item.onChange && item.onChange(values[item.name], item);
       this.removeError(item);
       this.setState({
-        values
+        values,
       });
     });
   }
@@ -246,7 +243,7 @@ export default class Form extends Component {
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
     this.setState({
-      values
+      values,
     });
   }
 
@@ -266,7 +263,7 @@ export default class Form extends Component {
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
     this.setState({
-      values
+      values,
     });
   }
 
@@ -278,7 +275,7 @@ export default class Form extends Component {
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
     this.setState({
-      values
+      values,
     });
   }
 
@@ -290,7 +287,7 @@ export default class Form extends Component {
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
     this.setState({
-      values
+      values,
     });
   }
 
@@ -325,7 +322,7 @@ export default class Form extends Component {
         if (field.name) values[field.name] = this.resetField(field, false);
       });
       this.setState({
-        values
+        values,
       });
     }, 0);
   }
@@ -352,14 +349,14 @@ export default class Form extends Component {
           placeholder={item.placeholder}
           disabled={item.disabled}
           inputMode={item.inputmode || ''}
-          onChange={event => {
+          onChange={(event) => {
             this.fieldChange(item, event);
             this.inputChange(item, event);
           }}
-          onFocus={event => {
+          onFocus={(event) => {
             this.inputFocus(item, event);
           }}
-          onBlur={event => {
+          onBlur={(event) => {
             this.inputBlur(item, event);
           }}
           type={types[item.name]}
@@ -387,14 +384,14 @@ export default class Form extends Component {
           inputMode={item.inputmode || ''}
           min={this.formatDate(item.min)}
           max={this.formatDate(item.max)}
-          onChange={event => {
+          onChange={(event) => {
             this.fieldChange(item, event);
             this.dateChange(item, event);
           }}
-          onFocus={event => {
+          onFocus={(event) => {
             this.inputFocus(item, event);
           }}
-          onBlur={event => {
+          onBlur={(event) => {
             this.inputBlur(item, event);
           }}
           type={types[item.name]}
@@ -416,7 +413,7 @@ export default class Form extends Component {
     item.onChange && item.onChange(values[item.name], item);
     this.removeError(item);
     this.setState({
-      values
+      values,
     });
   }
 
@@ -441,7 +438,7 @@ export default class Form extends Component {
     let { types } = this.state;
     types[name] = to;
     this.setState({
-      types
+      types,
     });
   }
 
@@ -469,13 +466,13 @@ export default class Form extends Component {
             placeholder={item.placeholder}
             disabled={item.disabled}
             multiple={item.multiple || false}
-            onFocus={event => {
+            onFocus={(event) => {
               this.inputFocus(item, event);
             }}
-            onBlur={event => {
+            onBlur={(event) => {
               this.inputBlur(item, event);
             }}
-            onChange={event => {
+            onChange={(event) => {
               this.fieldChange(item, event);
               this.fileChange(item, event);
             }}
@@ -498,14 +495,14 @@ export default class Form extends Component {
         className={className}
         placeholder={item.placeholder}
         disabled={item.disabled}
-        onChange={event => {
+        onChange={(event) => {
           this.fieldChange(item, event);
           this.inputChange(item, event);
         }}
-        onFocus={event => {
+        onFocus={(event) => {
           this.inputFocus(item, event);
         }}
-        onBlur={event => {
+        onBlur={(event) => {
           this.inputBlur(item, event);
         }}
         value={this.state.values[item.name]}
@@ -540,13 +537,13 @@ export default class Form extends Component {
           disabled={item.disabled}
           size={multiple ? item.size || 0 : 1}
           value={values[item.name]}
-          onFocus={event => {
+          onFocus={(event) => {
             this.inputFocus(item, event);
           }}
-          onBlur={event => {
+          onBlur={(event) => {
             this.inputBlur(item, event);
           }}
-          onChange={event => {
+          onChange={(event) => {
             this.fieldChange(item, event);
             this.selectChange(item, event);
           }}
@@ -597,7 +594,7 @@ export default class Form extends Component {
                     name={item.name + '__' + this.state.hash}
                     type={item.type}
                     disabled={item.disabled || switcher.disabled}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.fieldChange(item, event);
                       if (item.type === 'checkbox') {
                         this.checkboxChange(item, switcher, event);
@@ -628,7 +625,7 @@ export default class Form extends Component {
                     name={item.name + '__' + this.state.hash}
                     type={item.type}
                     disabled={item.disabled}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.fieldChange(item, event);
                       this.boolChange(item, event);
                     }}
@@ -661,7 +658,7 @@ export default class Form extends Component {
         <i
           className={[
             'form-spinner',
-            loading ? 'form-spinner__active' : ''
+            loading ? 'form-spinner__active' : '',
           ].join(' ')}
         />
       </button>
@@ -682,7 +679,7 @@ export default class Form extends Component {
       }
     });
     this.setState({
-      errors
+      errors,
     });
     return errors;
   }
@@ -690,14 +687,14 @@ export default class Form extends Component {
   beforeSubmit() {
     this.props.beforeSubmit && this.props.beforeSubmit(this);
     this.setState({
-      loading: true
+      loading: true,
     });
   }
 
   afterSubmit() {
     this.props.afterSubmit && this.props.afterSubmit(this);
     this.setState({
-      loading: false
+      loading: false,
     });
   }
 
@@ -713,11 +710,11 @@ export default class Form extends Component {
         onSubmit = this.props.onSubmit && this.props.onSubmit(data, this, e);
       if (onSubmit && onSubmit instanceof Promise) {
         onSubmit
-          .then(resp => {
+          .then((resp) => {
             this.props.autoReset && this.resetForm();
             resolve(resp);
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           })
           .finally(() => {
@@ -893,7 +890,7 @@ export default class Form extends Component {
     return (
       <div className="form-label">
         <label htmlFor={field.name + '__' + this.state.hash}>
-          {field.label.split('\n').map(function(item, i) {
+          {field.label.split('\n').map(function (item, i) {
             return (
               <div className="form-label-line" key={i}>
                 {item}
@@ -919,7 +916,7 @@ export default class Form extends Component {
       <div
         className={['form-reset', resetButton.className].join(' ')}
         title={resetButton.title}
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault();
           this.resetField(item);
         }}
@@ -946,10 +943,10 @@ export default class Form extends Component {
           'form-switch',
           item.switchButton && item.switchButton.className
             ? item.switchButton.className
-            : ''
+            : '',
         ].join(' ')}
         title={(item.switchButton && item.switchButton.title) || ''}
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault();
           !item.disabled &&
             this.switchField(
@@ -958,36 +955,50 @@ export default class Form extends Component {
             );
         }}
       >
-        {type === 'password' ? (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482.8 482.8">
-            <path
-              d="M396,210.4h-7.1v-62.9C388.9,66.2,322.8,0,241.4,0C160.1,0,93.9,66.1,93.9,147.5c0,1.9,0.7,61.3,1.4,62.9
-			c2,4.9,6.2,3.6,11.8,3.6c5.1,0,11.3,0.5,13.6-3.6c1.1-2,0.1-60.5,0.1-62.9c0-66.4,54-120.5,120.5-120.5
-			c66.4,0,120.5,54,120.5,120.5v62.9c-88.9,0-177.7,0-266.6,0c-2.8,0-5.6,0-8.4,0c-1.7,0-11,0.2-18.4,7.6
-			c-4.7,4.7-7.7,11.2-7.7,18.4v168.1c0,43.1,35.1,78.2,78.2,78.2h204.9c43.1,0,78.2-35.1,78.2-78.2V236.5
-			C422,222.1,410.4,210.4,396,210.4z M395,404.6c0,28.2-22.9,51.2-51.2,51.2H139c-28.2,0-51.2-22.9-51.2-51.2V237.4H395V404.6
-			L395,404.6z"
-            />
-            <path
-              d="M241.4,399.1c27.9,0,50.5-22.7,50.5-50.5c0-27.9-22.7-50.5-50.5-50.5c-27.9,0-50.5,22.7-50.5,50.5
-			S213.6,399.1,241.4,399.1z M241.4,325c13,0,23.5,10.6,23.5,23.5s-10.5,23.6-23.5,23.6S218,361.5,218,348.6S228.4,325,241.4,325z"
-            />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482.8 482.8">
-            <path
-              d="M395.95,210.4h-7.1v-62.9c0-81.3-66.1-147.5-147.5-147.5c-81.3,0-147.5,66.1-147.5,147.5c0,7.5,6,13.5,13.5,13.5
-			s13.5-6,13.5-13.5c0-66.4,54-120.5,120.5-120.5c66.4,0,120.5,54,120.5,120.5v62.9h-275c-14.4,0-26.1,11.7-26.1,26.1v168.1
-			c0,43.1,35.1,78.2,78.2,78.2h204.9c43.1,0,78.2-35.1,78.2-78.2V236.5C422.05,222.1,410.35,210.4,395.95,210.4z M395.05,404.6
-			c0,28.2-22.9,51.2-51.2,51.2h-204.8c-28.2,0-51.2-22.9-51.2-51.2V237.4h307.2L395.05,404.6L395.05,404.6z"
-            />
-            <path
-              d="M241.45,399.1c27.9,0,50.5-22.7,50.5-50.5c0-27.9-22.7-50.5-50.5-50.5c-27.9,0-50.5,22.7-50.5,50.5
-			S213.55,399.1,241.45,399.1z M241.45,325c13,0,23.5,10.6,23.5,23.5s-10.5,23.6-23.5,23.6s-23.5-10.6-23.5-23.5
-			S228.45,325,241.45,325z"
-            />
-          </svg>
-        )}
+        <div className="form-switch-inner">
+          {(() => {
+            if (type === 'password') {
+              return item.switchButton.content &&
+                item.switchButton.content.hidden ? (
+                item.switchButton.content.hidden
+              ) : (
+                <svg viewBox="0 0 482.8 482.8">
+                  <path
+                    d="M396,210.4h-7.1v-62.9C388.9,66.2,322.8,0,241.4,0C160.1,0,93.9,66.1,93.9,147.5c0,1.9,0.7,61.3,1.4,62.9
+          c2,4.9,6.2,3.6,11.8,3.6c5.1,0,11.3,0.5,13.6-3.6c1.1-2,0.1-60.5,0.1-62.9c0-66.4,54-120.5,120.5-120.5
+          c66.4,0,120.5,54,120.5,120.5v62.9c-88.9,0-177.7,0-266.6,0c-2.8,0-5.6,0-8.4,0c-1.7,0-11,0.2-18.4,7.6
+          c-4.7,4.7-7.7,11.2-7.7,18.4v168.1c0,43.1,35.1,78.2,78.2,78.2h204.9c43.1,0,78.2-35.1,78.2-78.2V236.5
+          C422,222.1,410.4,210.4,396,210.4z M395,404.6c0,28.2-22.9,51.2-51.2,51.2H139c-28.2,0-51.2-22.9-51.2-51.2V237.4H395V404.6
+          L395,404.6z"
+                  />
+                  <path
+                    d="M241.4,399.1c27.9,0,50.5-22.7,50.5-50.5c0-27.9-22.7-50.5-50.5-50.5c-27.9,0-50.5,22.7-50.5,50.5
+          S213.6,399.1,241.4,399.1z M241.4,325c13,0,23.5,10.6,23.5,23.5s-10.5,23.6-23.5,23.6S218,361.5,218,348.6S228.4,325,241.4,325z"
+                  />
+                </svg>
+              );
+            } else {
+              return item.switchButton.content &&
+                item.switchButton.content.showed ? (
+                item.switchButton.content.showed
+              ) : (
+                <svg viewBox="0 0 482.8 482.8">
+                  <path
+                    d="M395.95,210.4h-7.1v-62.9c0-81.3-66.1-147.5-147.5-147.5c-81.3,0-147.5,66.1-147.5,147.5c0,7.5,6,13.5,13.5,13.5
+          s13.5-6,13.5-13.5c0-66.4,54-120.5,120.5-120.5c66.4,0,120.5,54,120.5,120.5v62.9h-275c-14.4,0-26.1,11.7-26.1,26.1v168.1
+          c0,43.1,35.1,78.2,78.2,78.2h204.9c43.1,0,78.2-35.1,78.2-78.2V236.5C422.05,222.1,410.35,210.4,395.95,210.4z M395.05,404.6
+          c0,28.2-22.9,51.2-51.2,51.2h-204.8c-28.2,0-51.2-22.9-51.2-51.2V237.4h307.2L395.05,404.6L395.05,404.6z"
+                  />
+                  <path
+                    d="M241.45,399.1c27.9,0,50.5-22.7,50.5-50.5c0-27.9-22.7-50.5-50.5-50.5c-27.9,0-50.5,22.7-50.5,50.5
+          S213.55,399.1,241.45,399.1z M241.45,325c13,0,23.5,10.6,23.5,23.5s-10.5,23.6-23.5,23.6s-23.5-10.6-23.5-23.5
+          S228.45,325,241.45,325z"
+                  />
+                </svg>
+              );
+            }
+          })()}
+        </div>
       </div>
     );
   }
@@ -1020,19 +1031,19 @@ export default class Form extends Component {
       if (mask[index] === '{' && mask[index + 2] === '}') {
         maskArray.push({
           type: 'plain',
-          value: mask[index + 1]
+          value: mask[index + 1],
         });
         continueCount += 2;
       } else {
         if (specChars.split('').indexOf(mask[index]) >= 0) {
           maskArray.push({
             type: 'plain',
-            value: mask[index]
+            value: mask[index],
           });
         } else {
           maskArray.push({
             type: 'dynamic',
-            value: mask[index]
+            value: mask[index],
           });
         }
       }
@@ -1109,7 +1120,7 @@ export default class Form extends Component {
         cols,
         className = '',
         title = '',
-        loading = false
+        loading = false,
       } = this.state,
       formClass = 'form';
     if (this.props.theme) formClass += ' form__' + this.props.theme;
@@ -1117,7 +1128,7 @@ export default class Form extends Component {
     return (
       <div className={className}>
         <form
-          ref={inst => {
+          ref={(inst) => {
             ref = inst;
           }}
           className={formClass}

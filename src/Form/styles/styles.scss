@@ -327,6 +327,13 @@ $text: #232732;
     height: 20px;
     cursor: pointer;
     user-select: none;
+    &-inner{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
   }
   input[disabled] + .form-switch {
     opacity: 0.5;
