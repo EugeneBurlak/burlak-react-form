@@ -609,7 +609,7 @@ export default class Form extends Component {
                   />
                   <div className={switcherClassName}>
                     <div className="form-switcher-pointer" />
-                    <div dangerouslySetInnerHTML={{ __html: switcher.text }} />
+                    <div>{switcher.text}</div>
                   </div>
                 </label>
               );
@@ -635,7 +635,7 @@ export default class Form extends Component {
                   />
                   <div className={switcherClassName}>
                     <div className="form-switcher-pointer" />
-                    <div dangerouslySetInnerHTML={{ __html: item.text }} />
+                    <div>{item.text}</div>
                   </div>
                 </label>
               );
